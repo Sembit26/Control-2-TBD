@@ -68,14 +68,13 @@ public class NotificacionRepositoryImp implements NotificacionRepository {
 
     public void marcarLeida(Integer id){
         try (Connection con = sql2o.open()) {
-            String sql = "UPDATE notificaciones SET leida = TRUE WHEre id = :id";
+            String sql = "UPDATE notificaciones SET leida = TRUE WHERE id = :id";
             con.createQuery(sql)
                     .addParameter("id", id)
                     .executeUpdate();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public List<Notificacion> getAllNoLeidas(Integer idUser){

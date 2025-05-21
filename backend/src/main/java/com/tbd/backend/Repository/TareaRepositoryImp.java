@@ -11,74 +11,28 @@ import java.util.List;
 @Repository
 public class TareaRepositoryImp implements TareaRepository {
 
-    @Autowired
-    private Sql2o sql2o;
+    private final Sql2o sql2o;
+
+    public TareaRepositoryImp(Sql2o sql2o) {
+        this.sql2o = sql2o;
+    }
 
     @Override
     public Tarea crear(Tarea tarea) {
-        String sql = "INSERT INTO tarea (nombre, descripcion, fechaTermino, idUser, idSector, status) " +
-                "VALUES (:nombre, :descripcion, :fechaTermino, :idUser, :idSector, :status) " +
-                "RETURNING id";
+        String sql = "INSERT INTO tarea (nombre, descripcion, fecha_termino, id_user, id_sector, status) " +
+                "VALUES (:nombre, :descripcion, :fechaTermino, :idUser, :idSector, :status)";
         try (Connection con = sql2o.open()) {
-            Long id = con.createQuery(sql)
+            Long id = (Long) con.createQuery(sql, true)
                     .addParameter("nombre", tarea.getNombre())
                     .addParameter("descripcion", tarea.getDescripcion())
-                    .addParameter("fechaTermino", tarea.getFechaTermino())
+                    .addParameter("fechaTermino", new java.sql.Date(tarea.getFechaTermino().getTime()))
                     .addParameter("idUser", tarea.getIdUser())
                     .addParameter("idSector", tarea.getIdSector())
                     .addParameter("status", tarea.getStatus())
-                    .executeScalar(Long.class);
+                    .executeUpdate()
+                    .getKey(Long.class);
             tarea.setId(id);
             return tarea;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public Tarea actualizar(Tarea tarea) {
-        String sql = "UPDATE tarea SET nombre = :nombre, descripcion = :descripcion, fechaTermino = :fechaTermino, " +
-                "idUser = :idUser, idSector = :idSector, status = :status WHERE id = :id";
-        try (Connection con = sql2o.open()) {
-            con.createQuery(sql)
-                    .addParameter("nombre", tarea.getNombre())
-                    .addParameter("descripcion", tarea.getDescripcion())
-                    .addParameter("fechaTermino", tarea.getFechaTermino())
-                    .addParameter("idUser", tarea.getIdUser())
-                    .addParameter("idSector", tarea.getIdSector())
-                    .addParameter("status", tarea.getStatus())
-                    .addParameter("id", tarea.getId())
-                    .executeUpdate();
-            return tarea;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public void eliminar(Long id) {
-        String sql = "DELETE FROM tarea WHERE id = :id";
-        try (Connection con = sql2o.open()) {
-            con.createQuery(sql)
-                    .addParameter("id", id)
-                    .executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    @Override
-    public Tarea getById(Long id) {
-        String sql = "SELECT * FROM tarea WHERE id = :id";
-        try (Connection con = sql2o.open()) {
-            return con.createQuery(sql)
-                    .addParameter("id", id)
-                    .executeAndFetchFirst(Tarea.class);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
         }
     }
 
@@ -88,35 +42,92 @@ public class TareaRepositoryImp implements TareaRepository {
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .executeAndFetch(Tarea.class);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
         }
     }
 
     @Override
-    public List<Tarea> getByUser(Long idUser) {
-        String sql = "SELECT * FROM tarea WHERE idUser = :idUser";
+    public Tarea getById(Integer id) {
+        String sql = "SELECT * FROM tarea WHERE id = :id";
         try (Connection con = sql2o.open()) {
-            return con.createQuery(sql)
-                    .addParameter("idUser", idUser)
+            List<Tarea> result = con.createQuery(sql)
+                    .addParameter("id", id.longValue())
                     .executeAndFetch(Tarea.class);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            return result.isEmpty() ? null : result.get(0);
         }
     }
 
-    //Obtener todas las tareas de un usuario
-    public List<Tarea> getAllUser(Integer idUser){
-        try(Connection con = sql2o.open()){
-            String sql = "SELECT * FROM tarea WHERE idUser=:idUser";
+    @Override
+    public String update(Tarea tarea, Integer id) {
+        String sql = "UPDATE tarea SET nombre = :nombre, descripcion = :descripcion, fecha_termino = :fechaTermino, " +
+                "id_user = :idUser, id_sector = :idSector, status = :status WHERE id = :id";
+        try (Connection con = sql2o.open()) {
+            int updated = con.createQuery(sql)
+                    .addParameter("nombre", tarea.getNombre())
+                    .addParameter("descripcion", tarea.getDescripcion())
+                    .addParameter("fechaTermino", new java.sql.Date(tarea.getFechaTermino().getTime()))
+                    .addParameter("idUser", tarea.getIdUser())
+                    .addParameter("idSector", tarea.getIdSector())
+                    .addParameter("status", tarea.getStatus())
+                    .addParameter("id", id.longValue())
+                    .executeUpdate()
+                    .getResult();
+            return updated > 0 ? "Tarea actualizada correctamente." : "No se encontró la tarea o no se actualizó.";
+        }
+    }
+
+    @Override
+    public void delete(Integer id) {
+        String sql = "DELETE FROM tarea WHERE id = :id";
+        try (Connection con = sql2o.open()) {
+            con.createQuery(sql)
+                    .addParameter("id", id.longValue())
+                    .executeUpdate();
+        }
+    }
+
+    @Override
+    public List<Tarea> searchByStatus(Boolean status, Integer idUser) {
+        String sql = "SELECT * FROM tarea WHERE status = :status AND id_user = :idUser";
+        try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
-                    .addParameter("idUser", idUser)
+                    .addParameter("status", status)
+                    .addParameter("idUser", idUser.longValue())
                     .executeAndFetch(Tarea.class);
-        } catch(Exception e){
-            System.out.println(e.getMessage());
-            return null;
+        }
+    }
+
+    @Override
+    public List<Tarea> searchByKeywordAndStatus(Boolean status, String keyword, Integer idUser) {
+        String sql = "SELECT * FROM tarea WHERE status = :status AND id_user = :idUser AND " +
+                "(LOWER(nombre) LIKE :keyword OR LOWER(descripcion) LIKE :keyword)";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("status", status)
+                    .addParameter("idUser", idUser.longValue())
+                    .addParameter("keyword", "%" + keyword.toLowerCase() + "%")
+                    .executeAndFetch(Tarea.class);
+        }
+    }
+
+    @Override
+    public List<Tarea> getAllUser(Integer idUser) {
+        String sql = "SELECT * FROM tarea WHERE id_user = :idUser";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("idUser", idUser.longValue())
+                    .executeAndFetch(Tarea.class);
+        }
+    }
+
+    @Override
+    public List<Tarea> searchByKeyword(String keyword, Integer idUser) {
+        String sql = "SELECT * FROM tarea WHERE id_user = :idUser AND " +
+                "(LOWER(nombre) LIKE :keyword OR LOWER(descripcion) LIKE :keyword)";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("idUser", idUser.longValue())
+                    .addParameter("keyword", "%" + keyword.toLowerCase() + "%")
+                    .executeAndFetch(Tarea.class);
         }
     }
 }
