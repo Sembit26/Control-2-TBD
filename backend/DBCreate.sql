@@ -50,10 +50,3 @@ CREATE TABLE Notificaciones (
     mensaje TEXT NOT NULL,
     leida BOOLEAN NOT NULL
 );
-
--- Tabla: Zonas de agrupación (opcional para consultas espaciales más avanzadas)
-CREATE TABLE ZonaAgrupacion (
-    ID SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    geom GEOMETRY(Polygon, 4326)
-);

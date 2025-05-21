@@ -58,6 +58,30 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.sql2o</groupId>
+			<artifactId>sql2o</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+		<!-- Dependencia para trabajar Point en postgis -->
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-spatial</artifactId>
+			<version>6.4.4.Final</version> <!-- o la versión que uses -->
+		</dependency>
+		<dependency>
+			<groupId>org.locationtech.jts</groupId>
+			<artifactId>jts-core</artifactId>
+			<version>1.18.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.postgis</groupId>
+			<artifactId>postgis-jdbc</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -70,6 +94,9 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<!-- BORRAR LAS DOS COSAS DE ABAJO EN CASO DE EQUIS COSA -->
+							<version>1.18.30</version>
+							<!-- <scope>provided</scope>  - ✅ Se agregó el scope recomendado -->
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
