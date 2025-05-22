@@ -13,8 +13,7 @@ public class Usuario {
     private String username;
     private String correo;
     private String contrasena;
-
-    // campo real de geometría (no mapeado por sql2o directamente)
-    private Point ubicacion;
+    private double x;  // latitud
+    private double y;  // longitud
 }
 

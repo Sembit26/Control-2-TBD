@@ -16,8 +16,8 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- Tabla: Usuario (con ubicación geográfica)
 CREATE TABLE Usuario (
-    ID SERIAL PRIMARY KEY, 
-    username VARCHAR(25) NOT NULL, 
+    ID SERIAL PRIMARY KEY,
+    username VARCHAR(25) NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
     correo VARCHAR(255) UNIQUE NOT NULL,
     ubicacion GEOGRAPHY(Point, 4326) -- Punto geográfico
