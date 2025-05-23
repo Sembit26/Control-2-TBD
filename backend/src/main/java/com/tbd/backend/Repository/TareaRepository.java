@@ -1,17 +1,33 @@
 package com.tbd.backend.Repository;
 
 import com.tbd.backend.Entity.Tarea;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
-public interface TareaRepository {
-    public Tarea crear(Tarea tarea);
-    public List<Tarea> getAll();
-    public Tarea getById(Integer id);
-    public String update(Tarea tarea, Integer Id);
-    public void delete(Integer Id);
-    public List<Tarea> searchByStatus(Boolean status, Integer idUser);
-    public List<Tarea> searchByKeywordAndStatus(Boolean status, String keyword, Integer idUser);
-    public List<Tarea> getAllUser(Integer idUser);
-    public List<Tarea> searchByKeyword(String keyword, Integer idUser);
+@Repository
+public interface TareaRepository extends JpaRepository<Tarea, Long> {
+
+    // Obtener todas las tareas de un usuario específico
+    List<Tarea> findByUsuarioId(Long usuarioId);
+
+    // Obtener todas las tareas de un sector específico
+    List<Tarea> findBySectorId(Long sectorId);
+
+    // Obtener todas las tareas completadas o no completadas
+    List<Tarea> findByCompletada(Boolean completada);
+
+    // Buscar por palabra clave en nombre o descripción (ignora mayúsculas/minúsculas)
+    List<Tarea> findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String nombre, String descripcion);
+
+    // Buscar por estado y palabra clave combinados
+    List<Tarea> findByCompletadaAndNombreContainingIgnoreCaseOrCompletadaAndDescripcionContainingIgnoreCase(
+            Boolean completada1, String nombre, Boolean completada2, String descripcion);
+
+    // Tareas que vencen entre ahora y cierta fecha futura, y que aún no están completadas
+    List<Tarea> findByFechaTerminoBetweenAndCompletada(Date desde, Date hasta, Boolean completada);
+
+
 }

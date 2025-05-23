@@ -1,16 +1,24 @@
 package com.tbd.backend.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "notificacion")
 public class Notificacion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer idUser;
-    private Long idTarea;
+
+    @OneToOne
+    @JoinColumn(name = "tarea_id", unique = true)
+    private Tarea tarea;
+
     private String mensaje;
-    private Boolean leida; // Estado de lectura
+
+    private Boolean leida;
 }

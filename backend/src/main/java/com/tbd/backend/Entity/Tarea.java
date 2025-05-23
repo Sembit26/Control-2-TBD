@@ -1,21 +1,31 @@
 package com.tbd.backend.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import java.util.Date;
 
+@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "tarea")
 public class Tarea {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "sector_id")
+    private Sector sector;
+
     private String nombre;
     private String descripcion;
     private Date fechaTermino;
-    private Long idUser;
-    private Long idSector;
-    private Boolean status;
+    private Boolean completada;
+
 }
-
-

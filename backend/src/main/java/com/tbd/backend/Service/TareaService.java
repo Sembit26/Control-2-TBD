@@ -5,8 +5,9 @@ import com.tbd.backend.Repository.TareaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class TareaService {
@@ -14,43 +15,85 @@ public class TareaService {
     @Autowired
     private TareaRepository tareaRepository;
 
-    public Tarea crear(Tarea tarea) {
-        return tareaRepository.crear(tarea);
+    //----------------------- CRUD ----------------
+    // Crear tarea
+    public Tarea crearTarea(Tarea tarea) {
+        tarea.setCompletada(false); // por defecto pendiente al crear
+        return tareaRepository.save(tarea);
     }
 
-    public List<Tarea> getAll() {
-        return tareaRepository.getAll();
+    //Ver toda las tareas pendientes y completadas de un usuario
+    public List<Tarea> obtenerTareasPorUsuario(Long usuarioId) {
+        return tareaRepository.findByUsuarioId(usuarioId);
     }
 
-    public Tarea getById(Integer id) {
-        return tareaRepository.getById(id);
+    // Obtener todas las tareas asociadas a un sector por su ID
+    public List<Tarea> obtenerTareasPorSector(Long sectorId) {
+        return tareaRepository.findBySectorId(sectorId);
     }
 
-    public String update(Tarea tarea, Integer id) {
-        return tareaRepository.update(tarea, id);
+    // Editar tarea
+    public Tarea editarTarea(Long id, Tarea tareaDetalles) {
+        Tarea tarea = tareaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarea no encontrada con id: " + id));
+
+        tarea.setNombre(tareaDetalles.getNombre());
+        tarea.setDescripcion(tareaDetalles.getDescripcion());
+        tarea.setFechaTermino(tareaDetalles.getFechaTermino());
+        tarea.setSector(tareaDetalles.getSector());
+        // opcional: no cambiar usuario aquí, o sí según reglas de negocio
+        return tareaRepository.save(tarea);
     }
 
-    public void delete(Integer id) {
-        tareaRepository.delete(id);
+    // Eliminar tarea
+    public void eliminarTarea(Long id) {
+        tareaRepository.deleteById(id);
     }
 
-    /**
-     * Busca tareas filtrando por estado y opcionalmente por palabra clave.
-     * Si keyword es "empty" (como cadena), solo filtra por estado.
-     */
-    public List<Tarea> searchFilter(Boolean status, String keyword, Integer idUser) {
-        if (keyword != null && !Objects.equals(keyword, "empty")) {
-            return tareaRepository.searchByKeywordAndStatus(status, keyword, idUser);
-        } else {
-            return tareaRepository.searchByStatus(status, idUser);
+    //------------------ Marcar tarea como completada -------------------
+    // Marcar tarea como completada (se ingresa el id de la tarea)
+    public Tarea marcarCompletada(Long id) {
+        Tarea tarea = tareaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarea no encontrada con id: " + id));
+        tarea.setCompletada(true);
+        return tareaRepository.save(tarea);
+    }
+
+    //-------------------- Filtros y Búsqueda ----------------
+    // Listar tareas completadas
+    public List<Tarea> listarTareasCompletadas() {
+        return tareaRepository.findByCompletada(true);
+    }
+
+    // Listar tareas pendientes (no completadas)
+    public List<Tarea> listarTareasPendientes() {
+        return tareaRepository.findByCompletada(false);
+    }
+
+
+    // Buscar tareas por palabra clave en nombre o descripción (sin filtro de estado)
+    public List<Tarea> buscarPorPalabraClave(String palabraClave) {
+        return tareaRepository.findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(palabraClave, palabraClave);
+    }
+
+    // Filtrar por estado y palabra clave combinados
+    public List<Tarea> filtrarPorEstadoYPalabraClave(Boolean completada, String palabraClave) {
+        boolean tienePalabraClave = palabraClave != null && !palabraClave.isEmpty();
+
+        if (completada == null && !tienePalabraClave) {
+            return tareaRepository.findAll();
         }
-    }
-
-    public List<Tarea> searchFilterKeyword(String keyword, Integer idUser) {
-        return tareaRepository.searchByKeyword(keyword, idUser);
-    }
-
-    public List<Tarea> getAllUser(Integer idUser) {
-        return tareaRepository.getAllUser(idUser);
+        if (completada == null) {
+            // solo palabra clave
+            return buscarPorPalabraClave(palabraClave);
+        }
+        if (!tienePalabraClave) {
+            // solo estado
+            return completada ? listarTareasCompletadas() : listarTareasPendientes();
+        }
+        // combinamos estado y palabra clave
+        return tareaRepository.findByCompletadaAndNombreContainingIgnoreCaseOrCompletadaAndDescripcionContainingIgnoreCase(
+                completada, palabraClave,
+                completada, palabraClave);
     }
 }

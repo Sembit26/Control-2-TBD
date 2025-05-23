@@ -1,17 +1,13 @@
 package com.tbd.backend.Repository;
 
 import com.tbd.backend.Entity.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface UsuarioRepository {
-
-    void crearUsuario(Usuario usuario);
-    List<Usuario> getAll();
-    Usuario getById(Long id);
-    String update(Usuario usuario, Long id);
-    void delete(Long id);
-    public Usuario searchByNombre(String username);
-    public Usuario searchByCorreo(String correo);
-
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    boolean existsByCorreo(String correo);
+    Optional<Usuario> findByCorreo(String correo);
 }

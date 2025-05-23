@@ -3,13 +3,11 @@ package com.tbd.backend.Service;
 import com.tbd.backend.Entity.Notificacion;
 import com.tbd.backend.Entity.Tarea;
 import com.tbd.backend.Repository.NotificacionRepository;
-
+import com.tbd.backend.Repository.TareaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 
 @Service
 public class NotificacionService {
@@ -18,55 +16,59 @@ public class NotificacionService {
     private NotificacionRepository notificacionRepository;
 
     @Autowired
-    private TareaService tareaService;
+    private TareaRepository tareaRepository;
 
+    // ----------- CRUD básico -----------
+    public Notificacion crearNotificacion(Notificacion notificacion) {
+        notificacion.setLeida(false);
+        return notificacionRepository.save(notificacion);
+    }
 
-    public void checkTareasVencidas(Integer id_user) {
+    public List<Notificacion> obtenerTodas() {
+        return notificacionRepository.findAll();
+    }
+
+    public Optional<Notificacion> obtenerPorId(Long id) {
+        return notificacionRepository.findById(id);
+    }
+
+    public void eliminarNotificacion(Long id) {
+        notificacionRepository.deleteById(id);
+    }
+
+    public Notificacion marcarComoLeida(Long id) {
+        Notificacion notif = notificacionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No encontrada"));
+        notif.setLeida(true);
+        return notificacionRepository.save(notif);
+    }
+
+    // ----------- Generar notificaciones por vencimiento -----------
+
+    //Genera notificaciones para todas las tareas proximas a vencer (para todos los usuarios)
+    public void generarNotificacionesProximas() {
         Date hoy = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(hoy);
-        calendar.add(Calendar.DATE, 1);
-        Date diaSiguiente = calendar.getTime();
-        List<Notificacion> notificaciones = notificacionRepository.getAllByUser(id_user);
-        List<Tarea> tareas = tareaService.getAllUser(id_user);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(hoy);
+        cal.add(Calendar.DAY_OF_YEAR, 1); // tareas que vencen dentro de 1 día
+        Date manana = cal.getTime();
+
+        List<Tarea> tareas = tareaRepository.findByFechaTerminoBetweenAndCompletada(hoy, manana, false);
 
         for (Tarea tarea : tareas) {
-            boolean existe = false;
-            for (Notificacion notificacion : notificaciones) {
-                if (Objects.equals(notificacion.getIdTarea(), tarea.getId())){
-                    existe = true;
-                    break;
-                }
-            }
-            Date fecha = tarea.getFechaTermino();
-            if (!existe && fecha.before(diaSiguiente)) {
-                Notificacion notificacion = new Notificacion(null, id_user, tarea.getId(), "Tarea proxima a vencer", false );
-                Notificacion notificacionCreada = crear(notificacion);
+            Optional<Notificacion> yaExiste = notificacionRepository.findByTareaId(tarea.getId());
+            if (yaExiste.isEmpty()) {
+                Notificacion notif = new Notificacion();
+                notif.setTarea(tarea);
+                notif.setMensaje("La tarea '" + tarea.getNombre() + "' está por vencer.");
+                notif.setLeida(false);
+                notificacionRepository.save(notif);
             }
         }
     }
 
-    public Notificacion crear(Notificacion notificacion) {
-        return notificacionRepository.crear(notificacion);
-    }
-
-    public List<Notificacion> getAllByUser(Integer idUser) {
-        return notificacionRepository.getAllByUser(idUser);
-    }
-
-    public List<Notificacion> getAllByUserAnd(Integer idUser) {
-        return notificacionRepository.getAllByUserAnd(idUser);
-    }
-
-    public void marcarTodasComoLeidas(Integer idUser) {
-        notificacionRepository.marcarTodasComoLeidas(idUser);
-    }
-
-    public void marcarLeida(Integer id) {notificacionRepository.marcarLeida(id);}
-
-    public Integer getAllNoLeidas(Integer idUser){
-        List<Notificacion> notificaciones = notificacionRepository.getAllNoLeidas(idUser);
-        System.out.println(notificaciones);
-        return notificaciones.size();
+    // Listar notificaciones por usuario
+    public List<Notificacion> obtenerPorUsuario(Long usuarioId) {
+        return notificacionRepository.findByTarea_Usuario_Id(usuarioId);
     }
 }

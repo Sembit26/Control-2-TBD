@@ -1,54 +1,72 @@
 package com.tbd.backend.Controller;
-import com.tbd.backend.DTO.LoginRequest;
+
+import com.tbd.backend.DTO.UsuarioDTO;
 import com.tbd.backend.Entity.Usuario;
 import com.tbd.backend.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuario")
+@CrossOrigin("*")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("/create")
-    public void crearUsuario(@RequestBody Usuario usuario) {
-        usuarioService.crearUsuario(usuario);
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable Long id) {
+        Optional<UsuarioDTO> usuarioOpt = usuarioService.getById(id);
+        return usuarioOpt.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/getAll")
-    public List<Usuario> getAllUsuarios() {
+    public List<UsuarioDTO> getAllUsuarios() {
         return usuarioService.getAll();
     }
 
-    @GetMapping("/getById/{id}")
-    public Usuario getUsuarioById(@PathVariable Long id) {
-        return usuarioService.getById(id);
-    }
-
+    // Actualizar usuario
     @PutMapping("/update/{id}")
-    public void updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        usuarioService.updateUsuario(usuario, id);
+    public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuarioDetails) {
+        try {
+            Usuario actualizado = usuarioService.update(id, usuarioDetails);
+            return ResponseEntity.ok(actualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+    // Eliminar usuario
     @DeleteMapping("/delete/{id}")
-    public void deleteUsuario(@PathVariable Long id) {
-        usuarioService.deleteUsuario(id);
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
+        usuarioService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // ✅ Registro
+    // Registro
     @PostMapping("/register")
-    public String registrarUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.registrarUsuario(usuario);
+    public ResponseEntity<?> registerUsuario(@RequestBody UsuarioDTO dto) {
+        try {
+            Usuario registrado = usuarioService.register(dto);
+            return ResponseEntity.ok(registrado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    // ✅ Login
+    // Login (devuelve el usuario completo)
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
-        return usuarioService.iniciarSesion(loginRequest.getCorreo(), loginRequest.getContrasena());
+    public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuarioLogin) {
+        try {
+            Usuario usuario = usuarioService.login(usuarioLogin.getCorreo(), usuarioLogin.getContrasena());
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
     }
-
 }
