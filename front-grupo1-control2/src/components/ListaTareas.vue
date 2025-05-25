@@ -8,7 +8,7 @@
     <!-- Lista de tareas -->
     <v-row>
       <v-col cols="12" md="6" v-for="tarea in tareas" :key="tarea.id">
-        <TareaCard :tarea="tarea" />
+        <!-- <TareaCard :tarea="tarea" /> -->
       </v-col>
     </v-row>
   </v-container>
@@ -18,7 +18,7 @@
 import { ref, onMounted } from 'vue';
 import tareaService from '@/services/tarea.service.js';
 import FiltroBusqueda from './FiltroBusqueda.vue';
-import TareaCard from './TareaCard.vue';
+//import TareaCard from './TareaCard.vue';
 
 const tareas = ref([]);
 const estado = ref(null);

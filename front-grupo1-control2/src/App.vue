@@ -4,10 +4,10 @@
     <nav class="navbar" v-if="!$route.meta.hideNavBar">
       <ul>
         <li><router-link to="/" >Salir</router-link></li>
-        <li><router-link to="/home">Home</router-link></li>
-        <li><router-link to="/crearTarea">Crear Tarea</router-link></li>
-        <li><router-link to="/listaTareas">Tareas</router-link></li>
-        <li><router-link to="/notificacion">Notificaciones <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span></router-link></li>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/tareas/crear">Crear Tarea</router-link></li>
+        <li><router-link to="/tareas">Tareas</router-link></li>
+        <li><router-link to="/notificaciones">Notificaciones <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span></router-link></li>
       </ul>
     </nav>
     <div class="content">
