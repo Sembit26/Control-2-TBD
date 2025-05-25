@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tareas")
@@ -142,4 +143,59 @@ public class TareaController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(tareaService.buscarPorPalabraClavePaginado(palabra, pageable));
     }
+
+    // ------------------------------ PREGUNTAS -------------------------
+
+    @GetMapping("/tareasPorSector/{usuarioId}")
+    public ResponseEntity<List<Map<String, Object>>> tareasPorSector(@PathVariable Long usuarioId) {
+        return ResponseEntity.ok(tareaService.contarTareasPorSectorUsuario(usuarioId));
+    }
+
+    @GetMapping("/tareaMasCercana/{usuarioId}")
+    public ResponseEntity<Tarea> tareaMasCercana(@PathVariable Long usuarioId) {
+        Tarea tarea = tareaService.tareaPendienteMasCercana(usuarioId);
+        return tarea != null ? ResponseEntity.ok(tarea) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/sectorMasTareasEnRadio/{usuarioId}")
+    public ResponseEntity<Map<String, Object>> sectorMasTareasEnRadio(@PathVariable Long usuarioId) {
+        Map<String, Object> result = tareaService.sectorConMasTareasEnRadio(usuarioId);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/promedioDistanciaCompletadas/{usuarioId}")
+    public ResponseEntity<Double> promedioDistancia(@PathVariable Long usuarioId) {
+        Double result = tareaService.promedioDistanciaTareasCompletadas(usuarioId);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/sectoresMasTareasPendientes")
+    public ResponseEntity<List<Map<String, Object>>> sectoresMasPendientes() {
+        return ResponseEntity.ok(tareaService.sectoresConMasTareasPendientes());
+    }
+
+    @GetMapping("/tareaPendienteCercanaUbicacion/{usuarioId}")
+    public ResponseEntity<Tarea> tareaPendienteUbicacion(@PathVariable Long usuarioId) {
+        Tarea t = tareaService.tareaPendienteMasCercanaAGeoUsuario(usuarioId);
+        return t != null ? ResponseEntity.ok(t) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/tareasPorUsuarioYSector")
+    public ResponseEntity<List<Map<String, Object>>> tareasPorUsuarioYSector() {
+        return ResponseEntity.ok(tareaService.contarTareasPorUsuarioYSector());
+    }
+
+    @GetMapping("/sectorMasTareasCompletadas5km/{usuarioId}")
+    public ResponseEntity<Map<String, Object>> sectorMasCompletadas5km(@PathVariable Long usuarioId) {
+        Map<String, Object> result = tareaService.sectorConMasCompletadasEnRadio5km(usuarioId);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/promedioDistanciaGlobalCompletadas/{usuarioId}")
+    public ResponseEntity<Double> promedioDistanciaGlobal(@PathVariable Long usuarioId) {
+        Double result = tareaService.promedioDistanciaTodasCompletadasAUsuario(usuarioId);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
+    }
+
+
 }

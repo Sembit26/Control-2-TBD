@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -140,4 +141,46 @@ public class TareaService {
     public Page<Tarea> buscarPorPalabraClavePaginado(String palabraClave, Pageable pageable) {
         return tareaRepository.findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(palabraClave, palabraClave, pageable);
     }
+
+    // ------------------------------ PREGUNTAS -------------------------
+
+    public List<Map<String, Object>> contarTareasPorSectorUsuario(Long usuarioId) {
+        return tareaRepository.contarTareasPorSectorUsuario(usuarioId);
+    }
+
+    public Tarea tareaPendienteMasCercana(Long usuarioId) {
+        return tareaRepository.tareaPendienteMasCercana(usuarioId);
+    }
+
+    public Map<String, Object> sectorConMasTareasEnRadio(Long usuarioId) {
+        return tareaRepository.sectorConMasTareasEnRadio(usuarioId);
+    }
+
+    public Double promedioDistanciaTareasCompletadas(Long usuarioId) {
+        return tareaRepository.promedioDistanciaTareasCompletadas(usuarioId);
+    }
+
+    public List<Map<String, Object>> sectoresConMasTareasPendientes() {
+        return tareaRepository.sectoresConMasTareasPendientes();
+    }
+
+    public Tarea tareaPendienteMasCercanaAGeoUsuario(Long usuarioId) {
+        return tareaRepository.tareaPendienteMasCercanaAGeoUsuario(usuarioId);
+    }
+
+    public List<Map<String, Object>> contarTareasPorUsuarioYSector() {
+        return tareaRepository.contarTareasPorUsuarioYSector();
+    }
+
+    public Map<String, Object> sectorConMasCompletadasEnRadio5km(Long usuarioId) {
+        return tareaRepository.sectorConMasCompletadasEnRadio5km(usuarioId);
+    }
+
+    public Double promedioDistanciaTodasCompletadasAUsuario(Long usuarioId) {
+        return tareaRepository.promedioDistanciaTodasCompletadasAUsuario(usuarioId);
+    }
+
+
+
+
 }
