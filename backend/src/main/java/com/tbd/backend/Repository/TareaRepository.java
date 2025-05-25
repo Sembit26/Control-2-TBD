@@ -1,6 +1,8 @@
 package com.tbd.backend.Repository;
 
 import com.tbd.backend.Entity.Tarea;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +30,20 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
     // Tareas que vencen entre ahora y cierta fecha futura, y que aún no están completadas
     List<Tarea> findByFechaTerminoBetweenAndCompletada(Date desde, Date hasta, Boolean completada);
+
+    Page<Tarea> findByCompletadaAndNombreContainingIgnoreCaseOrCompletadaAndDescripcionContainingIgnoreCase(
+            Boolean c1, String nombre,
+            Boolean c2, String descripcion,
+            Pageable pageable
+    );
+
+    Page<Tarea> findByUsuarioId(Long usuarioId, Pageable pageable);
+
+    Page<Tarea> findBySectorId(Long sectorId, Pageable pageable);
+
+    Page<Tarea> findByCompletada(Boolean completada, Pageable pageable);
+
+    Page<Tarea> findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String nombre, String descripcion, Pageable pageable);
 
 
 }

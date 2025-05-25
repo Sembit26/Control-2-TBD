@@ -3,6 +3,8 @@ package com.tbd.backend.Service;
 import com.tbd.backend.Entity.Tarea;
 import com.tbd.backend.Repository.TareaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -95,5 +97,47 @@ public class TareaService {
         return tareaRepository.findByCompletadaAndNombreContainingIgnoreCaseOrCompletadaAndDescripcionContainingIgnoreCase(
                 completada, palabraClave,
                 completada, palabraClave);
+    }
+
+    public Page<Tarea> filtrarPorEstadoYPalabraClavePaginado(Boolean completada, String palabraClave, Pageable pageable) {
+        boolean tienePalabraClave = palabraClave != null && !palabraClave.isEmpty();
+
+        if (completada == null && !tienePalabraClave) {
+            return tareaRepository.findAll(pageable); // sin filtros
+        }
+
+        if (completada == null) {
+            // Solo palabra clave
+            return tareaRepository.findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(palabraClave, palabraClave, pageable);
+        }
+
+        if (!tienePalabraClave) {
+            // Solo estado
+            return tareaRepository.findByCompletada(completada, pageable);
+        }
+
+        // Filtro combinado
+        return tareaRepository.findByCompletadaAndNombreContainingIgnoreCaseOrCompletadaAndDescripcionContainingIgnoreCase(
+                completada, palabraClave, completada, palabraClave, pageable);
+    }
+
+    public Page<Tarea> obtenerTareasPorUsuario(Long usuarioId, Pageable pageable) {
+        return tareaRepository.findByUsuarioId(usuarioId, pageable);
+    }
+
+    public Page<Tarea> obtenerTareasPorSector(Long sectorId, Pageable pageable) {
+        return tareaRepository.findBySectorId(sectorId, pageable);
+    }
+
+    public Page<Tarea> listarTareasCompletadas(Pageable pageable) {
+        return tareaRepository.findByCompletada(true, pageable);
+    }
+
+    public Page<Tarea> listarTareasPendientes(Pageable pageable) {
+        return tareaRepository.findByCompletada(false, pageable);
+    }
+
+    public Page<Tarea> buscarPorPalabraClavePaginado(String palabraClave, Pageable pageable) {
+        return tareaRepository.findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(palabraClave, palabraClave, pageable);
     }
 }
