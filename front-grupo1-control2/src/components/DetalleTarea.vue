@@ -31,15 +31,14 @@ import tareaService from '@/services/tarea.service.js';
 
 const route = useRoute();
 const router = useRouter();
-const tareaId = route.params.id;
-
 const tarea = ref(null);
 
 const cargarTarea = async () => {
   try {
-    const tareas = await tareaService.getTareasByUsuario(1); // temporal si no tienes getById
-    tarea.value = tareas.data.find(t => t.id == tareaId);
+    const res = await tareaService.getTareaById(route.params.id);
+    tarea.value = res.data;
   } catch (err) {
+    console.error('Error al cargar tarea:', err);
     tarea.value = null;
   }
 };

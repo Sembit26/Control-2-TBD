@@ -2,6 +2,8 @@ package com.tbd.backend.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Data
@@ -15,7 +17,8 @@ public class Notificacion {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "tarea_id", unique = true)
+    @JoinColumn(name = "id_tarea", unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Tarea tarea;
 
     private String mensaje;

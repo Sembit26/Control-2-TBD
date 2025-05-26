@@ -18,6 +18,9 @@ const getTareasByUsuario = (usuarioId) => http.get(`${baseUrl}/getTareasByUsuari
 
 const getTareasBySector = (sectorId) => http.get(`${baseUrl}/getTareasBySector/${sectorId}`);
 
+const getTareaById = (id) => http.get(`/api/tareas/getById/${id}`);
+
+
 // ----------- Filtros simples -----------
 
 const getTareasCompletadas = () => http.get(`${baseUrl}/getTareasCompletadas`);
@@ -90,6 +93,7 @@ export default {
   getTareasBySector,
   getTareasCompletadas,
   getTareasPendientes,
+  getTareaById,
   buscarPorPalabraClave,
   filtrarTareas,
   filtrarTareasPaginado,

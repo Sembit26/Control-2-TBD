@@ -11,12 +11,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
     // Obtener todas las tareas de un usuario específico
     List<Tarea> findByUsuarioId(Long usuarioId);
+
 
     // Obtener todas las tareas de un sector específico
     List<Tarea> findBySectorId(Long sectorId);

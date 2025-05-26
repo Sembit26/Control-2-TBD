@@ -14,7 +14,7 @@ const sectores = ref([]);
 
 const cargarSectores = async () => {
   try {
-    const res = await sectorService.getAll();
+    const res = await sectorService.obtenerTodos();
     sectores.value = res.data;
   } catch (err) {
     console.error('Error al cargar sectores:', err);

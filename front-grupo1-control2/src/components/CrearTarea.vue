@@ -86,10 +86,10 @@ const crearTarea = async () => {
   };
 
   try {
-    await tareaService.create(tarea);
+    await tareaService.crearTarea(tarea);
     mensaje.value = 'Tarea creada correctamente.';
     mensajeTipo.value = 'success';
-
+    // FALTA AASIGNARLE EL USUARIO ID
     // Reiniciar formulario
     nombre.value = '';
     descripcion.value = '';
@@ -105,7 +105,7 @@ const crearTarea = async () => {
 
 const obtenerSectores = async () => {
   try {
-    const res = await sectorService.getAll();
+    const res = await sectorService.obtenerTodos();
     sectores.value = res.data;
   } catch (err) {
     mensaje.value = 'Error al cargar sectores.';

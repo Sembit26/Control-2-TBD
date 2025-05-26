@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tareas")
@@ -36,6 +37,13 @@ public class TareaController {
     @GetMapping("/getTareasBySector/{sectorId}")
     public ResponseEntity<List<Tarea>> obtenerTareasPorSector(@PathVariable Long sectorId) {
         return ResponseEntity.ok(tareaService.obtenerTareasPorSector(sectorId));
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<Tarea> obtenerTareaPorId(@PathVariable Long id) {
+        Optional<Tarea> tareaOpt = tareaService.obtenerTareaPorId(id);
+        return tareaOpt.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Editar tarea (Se le pasan todos los campos de la tarea)

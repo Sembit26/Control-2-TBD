@@ -35,6 +35,11 @@ public class TareaService {
         return tareaRepository.findBySectorId(sectorId);
     }
 
+    // Obtener tarea por ID
+    public Optional<Tarea> obtenerTareaPorId(Long id) {
+        return tareaRepository.findById(id);
+    }
+
     // Editar tarea
     public Tarea editarTarea(Long id, Tarea tareaDetalles) {
         Tarea tarea = tareaRepository.findById(id)
