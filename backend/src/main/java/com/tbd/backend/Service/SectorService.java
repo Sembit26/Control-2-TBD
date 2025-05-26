@@ -37,12 +37,21 @@ public class SectorService {
         dto.setId(sector.getId());
         dto.setNombre(sector.getNombre());
         dto.setDescripcion(sector.getDescripcion());
+
         if (sector.getUbicacion() != null) {
-            dto.setCoordenadaX(sector.getUbicacion().getX());
-            dto.setCoordenadaY(sector.getUbicacion().getY());
+            // Obtener el anillo exterior del polígono (primer anillo)
+            var coords = sector.getUbicacion().getExteriorRing().getCoordinates();
+
+            List<double[]> coordenadas = new java.util.ArrayList<>();
+            for (var coord : coords) {
+                coordenadas.add(new double[]{coord.getX(), coord.getY()});
+            }
+            dto.setCoordenadas(coordenadas);
         }
+
         return dto;
     }
+
 
 
     // Actualizar (recibe id y sector con datos nuevos)

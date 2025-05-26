@@ -3,7 +3,7 @@ package com.tbd.backend.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 
 @Entity
 @Data
@@ -21,6 +21,6 @@ public class Sector {
     private String descripcion;
 
     @JsonIgnore
-    @Column(columnDefinition = "geometry(Point, 4326)")
-    private Point ubicacion;
+    @Column(columnDefinition = "geometry(Polygon, 4326)")
+    private Polygon ubicacion;
 }
