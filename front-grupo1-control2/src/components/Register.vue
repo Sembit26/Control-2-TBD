@@ -24,6 +24,17 @@
         </v-btn>
       </v-form>
 
+      <!-- Botón para volver al login -->
+      <v-btn
+        class="mt-2"
+        variant="text"
+        color="secondary"
+        block
+        @click="volverAlLogin"
+      >
+        ¿Ya tienes cuenta? Inicia sesión
+      </v-btn>
+
       <v-alert v-if="error" type="error" class="mt-4">{{ error }}</v-alert>
       <v-alert v-if="exito" type="success" class="mt-4">¡Registro exitoso!</v-alert>
     </v-card>
@@ -32,6 +43,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import L from 'leaflet';
 import usuarioService from '@/services/usuario.service.js';
 
@@ -43,6 +55,7 @@ const y = ref(null); // latitud
 const error = ref(null);
 const exito = ref(false);
 const cargando = ref(false);
+const router = useRouter();
 
 const registrarUsuario = async () => {
   if (x.value === null || y.value === null) {
@@ -70,6 +83,10 @@ const registrarUsuario = async () => {
   } finally {
     cargando.value = false;
   }
+};
+
+const volverAlLogin = () => {
+  router.push('/login');
 };
 
 onMounted(() => {

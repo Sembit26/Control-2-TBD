@@ -3,11 +3,10 @@
     <!-- Barra de navegación fija en la parte superior -->
     <nav class="navbar" v-if="!$route.meta.hideNavBar">
       <ul>
-        <li><router-link to="/" >Salir</router-link></li>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/tareas/crear">Crear Tarea</router-link></li>
         <li><router-link to="/tareas">Tareas</router-link></li>
+        <li><router-link to="/tareas/crear">Crear Tarea</router-link></li>
         <li><router-link to="/notificaciones">Notificaciones <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span></router-link></li>
+        <li><router-link to="/login" >Cerrar sesión</router-link></li>
       </ul>
     </nav>
     <div class="content">
@@ -30,6 +29,7 @@ export default {
   },
   methods: {
     async loadUnreadNotifications() {
+      
       if (!localStorage.getItem("id")) {
         return;
       }

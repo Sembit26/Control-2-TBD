@@ -6,7 +6,6 @@
         :items="estados"
         label="Filtrar por estado"
         clearable
-        @change="emitirFiltros"
       />
     </v-col>
 
@@ -15,15 +14,19 @@
         v-model="palabraClaveLocal"
         label="Buscar por palabra clave"
         clearable
-        @keyup.enter="emitirFiltros"
-        @blur="emitirFiltros"
       />
+    </v-col>
+
+    <v-col cols="12" class="d-flex justify-end">
+      <v-btn color="primary" @click="emitirFiltros">
+        Confirmar filtro
+      </v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const emit = defineEmits(['filtrar']);
 
@@ -31,6 +34,7 @@ const estadoLocal = ref(null);
 const palabraClaveLocal = ref('');
 
 const estados = [
+  { title: 'Todas', value: null },
   { title: 'Pendiente', value: false },
   { title: 'Completada', value: true },
 ];

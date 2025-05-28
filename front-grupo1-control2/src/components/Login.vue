@@ -29,6 +29,17 @@
         </v-btn>
       </v-form>
 
+      <!-- Botón para ir a la página de registro -->
+      <v-btn
+        class="mt-2"
+        variant="text"
+        color="secondary"
+        block
+        @click="irARegistro"
+      >
+        ¿No tienes cuenta? Regístrate
+      </v-btn>
+
       <v-alert v-if="error" type="error" class="mt-4">
         {{ error }}
       </v-alert>
@@ -53,9 +64,9 @@ const login = async () => {
     error.value = null;
 
     const res = await usuarioService.login({ correo: correo.value, contrasena: contrasena.value });
-
-    // Guardar datos si lo necesitas (ej: en localStorage o store)
-    // localStorage.setItem('usuario', JSON.stringify(res.data));
+    // Guardar el id del usuario en localStorage
+    localStorage.setItem('usuarioId', res.data.id);
+    console.log("ID usuario logeado:", localStorage.getItem('usuarioId'));
 
     router.push('/tareas'); // Redirigir a la vista principal
   } catch (err) {
@@ -63,5 +74,9 @@ const login = async () => {
   } finally {
     cargando.value = false;
   }
+};
+
+const irARegistro = () => {
+  router.push('/register');
 };
 </script>

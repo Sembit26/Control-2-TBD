@@ -30,6 +30,7 @@
           v-model="fechaTermino"
           label="Fecha de término"
           type="date"
+          :min="hoy"
           required
         />
 
@@ -66,6 +67,9 @@ const cargando = ref(false);
 const mensaje = ref('');
 const mensajeTipo = ref('success');
 
+// Obtener la fecha de hoy en formato YYYY-MM-DD
+const hoy = new Date().toISOString().split('T')[0];
+
 const crearTarea = async () => {
   if (!nombre.value || !descripcion.value || !fechaTermino.value || !sectorId.value) {
     mensaje.value = 'Por favor, completa todos los campos.';
@@ -76,13 +80,16 @@ const crearTarea = async () => {
   cargando.value = true;
   mensaje.value = '';
 
+  // Obtener el id del usuario logeado desde localStorage
+  const usuarioId = localStorage.getItem('usuarioId');
+
   const tarea = {
     nombre: nombre.value,
     descripcion: descripcion.value,
     fechaTermino: fechaTermino.value,
     completada: false,
-    sector: { id: sectorId.value }
-    // usuario lo puedes agregar desde el contexto o localStorage luego si es necesario
+    sector: { id: sectorId.value },
+    usuario: { id: usuarioId }
   };
 
   try {

@@ -10,7 +10,6 @@
       <v-col cols="12" md="6" v-for="tarea in tareas" :key="tarea.id">
       <TareaCard
         :tarea="tarea"
-        @verDetalle="verDetalle"
         @onCompletar="marcarCompletada"
         @onEliminar="eliminarTarea"
       />
@@ -66,10 +65,6 @@ const eliminarTarea = async (id) => {
   } catch (err) {
     console.error('Error al eliminar tarea:', err);
   }
-};
-
-const verDetalle = (tarea) => {
-  router.push(`/tareas/detalle/${tarea.id}`);
 };
 
 onMounted(() => {

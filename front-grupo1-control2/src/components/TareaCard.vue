@@ -19,9 +19,6 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn @click="$emit('verDetalle', tarea)" color="info" size="small">
-        Ver Detalle
-      </v-btn>
 
       <v-spacer></v-spacer>
       <v-btn
