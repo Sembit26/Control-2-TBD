@@ -169,8 +169,8 @@ public class TareaService {
         return tareaRepository.sectoresConMasTareasPendientes();
     }
 
-    public Tarea tareaPendienteMasCercanaAGeoUsuario(Long usuarioId) {
-        return tareaRepository.tareaPendienteMasCercanaAGeoUsuario(usuarioId);
+    public List<Tarea> tareaPendienteDelUsuario(Long usuarioId) {
+        return tareaRepository.findByUsuarioIdAndCompletadaFalse(usuarioId);
     }
 
     public List<Map<String, Object>> contarTareasPorUsuarioYSector() {

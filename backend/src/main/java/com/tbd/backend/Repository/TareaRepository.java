@@ -140,48 +140,46 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 """, nativeQuery = true)
     List<Map<String, Object>> sectoresConMasTareasPendientes();
 
+    //Tareas pendientes asociadas a un usuario
+    List<Tarea> findByUsuarioIdAndCompletadaFalse(Long usuarioId);
 
+    //¿Cuántas tareas ha realizado cada usuario por sector?
     @Query(value = """
-    SELECT t.*
+    SELECT u.username AS usuario, s.nombre AS sector, COUNT(*) AS total_tareas
     FROM tarea t
-    JOIN usuario u ON u.id = :usuarioId
-    WHERE t.completada = false
-    ORDER BY ST_Distance(t.ubicacion, u.ubicacion)
-    LIMIT 1
-    """, nativeQuery = true)
-    Tarea tareaPendienteMasCercanaAGeoUsuario(@Param("usuarioId") Long usuarioId);
-
-    @Query(value = """
-    SELECT u.username AS usuario, s.nombre AS sector, COUNT(*) AS total
-    FROM tarea t
-    JOIN usuario u ON u.id = t.usuario_id
-    JOIN sector s ON s.id = t.sector_id
+    JOIN usuario u ON t.usuario_id = u.id
+    JOIN sector s ON t.sector_id = s.id
+    WHERE t.completada = TRUE
     GROUP BY u.username, s.nombre
-    ORDER BY u.username, total DESC
-    """, nativeQuery = true)
+    ORDER BY u.username, s.nombre
+""", nativeQuery = true)
     List<Map<String, Object>> contarTareasPorUsuarioYSector();
 
+    //¿Cuál es el sector con más tareas completadas dentro de un radio de 5 km
+    //desde la ubicación del usuario?
     @Query(value = """
-    SELECT s.nombre AS sector, COUNT(*) AS total
+    SELECT s.nombre AS sector, COUNT(*) AS total_tareas
     FROM tarea t
-    JOIN sector s ON s.id = t.sector_id
+    JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
-    WHERE t.completada = true
-      AND ST_DWithin(t.ubicacion, u.ubicacion, 5000)
+    WHERE t.completada = TRUE
+      AND ST_DWithin(s.ubicacion::geography, u.ubicacion::geography, 5000)
     GROUP BY s.nombre
-    ORDER BY total DESC
+    ORDER BY total_tareas DESC
     LIMIT 1
-    """, nativeQuery = true)
+""", nativeQuery = true)
     Map<String, Object> sectorConMasCompletadasEnRadio5km(@Param("usuarioId") Long usuarioId);
 
+    //¿Cuál es el promedio de distancia entre las tareas completadas y el punto
+    //registrado del usuario?
     @Query(value = """
-    SELECT AVG(ST_Distance(t.ubicacion, u.ubicacion)) AS promedio
+    SELECT AVG(ST_Distance(s.ubicacion::geography, u.ubicacion::geography)) AS promedio_distancia
     FROM tarea t
+    JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
-    WHERE t.completada = true
-    """, nativeQuery = true)
+    WHERE t.completada = TRUE
+""", nativeQuery = true)
     Double promedioDistanciaTodasCompletadasAUsuario(@Param("usuarioId") Long usuarioId);
-
 
 
 }

@@ -159,6 +159,15 @@ public class TareaController {
         return ResponseEntity.ok(tareaService.contarTareasPorSectorUsuario(usuarioId));
     }
 
+    @GetMapping("/tareaPendientesDelUsuario/{usuarioId}")
+    public ResponseEntity<List<Tarea>> obtenerTareasPendientesPorUsuario(@PathVariable Long usuarioId) {
+        List<Tarea> tareasPendientes = tareaService.tareaPendienteDelUsuario(usuarioId);
+        if (tareasPendientes.isEmpty()) {
+            return ResponseEntity.noContent().build(); // o ResponseEntity.ok(Collections.emptyList());
+        }
+        return ResponseEntity.ok(tareasPendientes);
+    }
+
     @GetMapping("/tareaMasCercana/{usuarioId}")
     public ResponseEntity<Tarea> tareaMasCercana(@PathVariable Long usuarioId) {
         Tarea tarea = tareaService.tareaPendienteMasCercana(usuarioId);
@@ -180,12 +189,6 @@ public class TareaController {
     @GetMapping("/sectoresMasTareasPendientes")
     public ResponseEntity<List<Map<String, Object>>> sectoresMasPendientes() {
         return ResponseEntity.ok(tareaService.sectoresConMasTareasPendientes());
-    }
-
-    @GetMapping("/tareaPendienteCercanaUbicacion/{usuarioId}")
-    public ResponseEntity<Tarea> tareaPendienteUbicacion(@PathVariable Long usuarioId) {
-        Tarea t = tareaService.tareaPendienteMasCercanaAGeoUsuario(usuarioId);
-        return t != null ? ResponseEntity.ok(t) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/tareasPorUsuarioYSector")
