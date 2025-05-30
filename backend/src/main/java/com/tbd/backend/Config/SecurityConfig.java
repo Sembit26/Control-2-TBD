@@ -29,7 +29,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //SOLO PERMITE ACCEDER A ESAS RUTAS, LUEGO PARA ACCEDER A OTRAS NECESITARA UN TOKEN
                         .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
-                        //.requestMatchers("/pedido/**").authenticated()
                         .anyRequest().permitAll()
                         //.anyRequest().authenticated() //DESPUES SE DEBE COLOCAR ESTO Y NO LO DE permitAll()
                 )
