@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioDTO {
+    private Long id;       // <-- agregamos el id
     private String username;
     private String correo;
     private String contrasena;

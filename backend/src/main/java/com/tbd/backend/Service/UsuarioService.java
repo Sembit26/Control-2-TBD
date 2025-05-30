@@ -1,5 +1,7 @@
 package com.tbd.backend.Service;
 
+import com.tbd.backend.Config.InputVerificationService;
+import com.tbd.backend.Config.JwtMiddlewareService;
 import com.tbd.backend.DTO.UsuarioDTO;
 import com.tbd.backend.Entity.Usuario;
 import com.tbd.backend.Repository.UsuarioRepository;
@@ -7,6 +9,8 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +26,12 @@ public class UsuarioService {
     @Autowired
     private GeometryFactory geometryFactory;
 
+    @Autowired
+    private JwtMiddlewareService jwtMiddlewareService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<UsuarioDTO> getAll() {
         return usuarioRepository.findAll().stream()
                 .map(this::convertToDTO)
@@ -36,6 +46,7 @@ public class UsuarioService {
     // Método privado para convertir entidad a DTO
     private UsuarioDTO convertToDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(usuario.getId());
         dto.setUsername(usuario.getUsername());
         dto.setCorreo(usuario.getCorreo());
         dto.setContrasena(usuario.getContrasena()); // En prod, quizás no mandar la contraseña
@@ -60,34 +71,54 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // Registro - solo si el correo no existe
     public Usuario register(UsuarioDTO dto) {
         if (usuarioRepository.existsByCorreo(dto.getCorreo())) {
             throw new RuntimeException("Correo ya registrado");
         }
+            Usuario usuario = new Usuario();
+            usuario.setUsername(dto.getUsername());
+            usuario.setCorreo(dto.getCorreo());
 
-        Usuario usuario = new Usuario();
-        usuario.setUsername(dto.getUsername());
-        usuario.setCorreo(dto.getCorreo());
-        usuario.setContrasena(dto.getContrasena());
+            // Encriptar contraseña
+            String encryptedPassword = passwordEncoder.encode(dto.getContrasena());
+            usuario.setContrasena(encryptedPassword);
 
-        Point ubicacion = geometryFactory.createPoint(new Coordinate(dto.getX(), dto.getY()));
-        ubicacion.setSRID(4326); // <- muy importante para PostGIS
-        usuario.setUbicacion(ubicacion);
+            // Crear ubicación geográfica
+            Point ubicacion = geometryFactory.createPoint(new Coordinate(dto.getX(), dto.getY()));
+            ubicacion.setSRID(4326);
+            usuario.setUbicacion(ubicacion);
 
         return usuarioRepository.save(usuario);
     }
 
+
     // Login - validar correo y contraseña
-    public Usuario login(String correo, String contrasena) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(correo);
-        if (usuarioOpt.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
+    public ResponseEntity<Object> login(String correo, String contrasena) {
+
+        if (!InputVerificationService.validateInput(correo) || !InputVerificationService.validateInput(contrasena)) {
+            return ResponseEntity.badRequest().body("Error al iniciar sesión: caracteres no permitidos.");
         }
-        Usuario usuario = usuarioOpt.get();
-        if (!usuario.getContrasena().equals(contrasena)) {
-            throw new RuntimeException("Contraseña incorrecta");
+
+        try {
+            Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(correo);
+
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.status(401).body("Usuario no encontrado.");
+            }
+
+            Usuario usuario = usuarioOpt.get();
+            String storedPassword = usuario.getContrasena();
+
+            if (!passwordEncoder.matches(contrasena, storedPassword)) {
+                return ResponseEntity.status(401).body("Contraseña incorrecta.");
+            }
+
+            String token = jwtMiddlewareService.generateToken(usuario);
+            return ResponseEntity.ok(token);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al iniciar sesión: " + e.getMessage());
         }
-        return usuario;
     }
+
 }

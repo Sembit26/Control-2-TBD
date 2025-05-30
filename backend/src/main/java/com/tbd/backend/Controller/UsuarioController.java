@@ -61,12 +61,8 @@ public class UsuarioController {
 
     // Login (devuelve el usuario completo)
     @PostMapping("/login")
-    public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuarioLogin) {
-        try {
-            Usuario usuario = usuarioService.login(usuarioLogin.getCorreo(), usuarioLogin.getContrasena());
-            return ResponseEntity.ok(usuario);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(e.getMessage());
-        }
+    public ResponseEntity<Object> loginUsuario(@RequestBody Usuario usuarioLogin) {
+        return usuarioService.login(usuarioLogin.getCorreo(), usuarioLogin.getContrasena());
     }
+
 }
