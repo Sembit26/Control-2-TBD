@@ -25,15 +25,27 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults()) // Habilitar CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        //SOLO PERMITE ACCEDER A ESAS RUTAS, LUEGO PARA ACCEDER A OTRAS NECESITARA UN TOKEN
-                        .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/buscar/correo").permitAll()
-                        .anyRequest().permitAll()
-                        //.anyRequest().authenticated() //DESPUES SE DEBE COLOCAR ESTO Y NO LO DE permitAll()
+                        .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/buscar/correo", "/api/notificaciones/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:5173"); // Permitir el origen del frontend
+        configuration.addAllowedMethod("*"); // Permitir todos los métodos (GET, POST, etc.)
+        configuration.addAllowedHeader("*"); // Permitir todos los headers
+        configuration.setAllowCredentials(true); // Permitir credenciales (si es necesario)
+
+        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplicar configuración a todas las rutas
+        return source;
     }
 
     @Bean

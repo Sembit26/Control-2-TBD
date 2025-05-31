@@ -13,8 +13,9 @@ import sectorService from '@/services/sector.service.js';
 const sectores = ref([]);
 
 const cargarSectores = async () => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    const res = await sectorService.obtenerTodos();
+    const res = await sectorService.obtenerTodos(token);
     sectores.value = res.data;
   } catch (err) {
     console.error('Error al cargar sectores:', err);

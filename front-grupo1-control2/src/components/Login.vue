@@ -65,18 +65,12 @@ const login = async () => {
     error.value = null;
 
     const res = await usuarioService.login({ correo: correo.value, contrasena: contrasena.value });
-    // Guardar el id del usuario en localStorage
+    // Guardar el toekn del usuario en localStorage
     localStorage.setItem("jwt", res.data);
-    //console.log("jwt:", res.data);
-
-    // buscarPorCorreo retorna un Long que es el id del usuario
     const usuarioId = await ClienteService.buscarPorCorreo(correo.value, res.data);
-
     // Guardar el id del usuario en localStorage
     localStorage.setItem("usuarioId", usuarioId.data);
     console.log("usuarioId:", usuarioId.data);
-
-
 
     router.push('/tareas'); // Redirigir a la vista principal
   } catch (err) {

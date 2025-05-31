@@ -112,7 +112,7 @@
 import { ref, onMounted } from 'vue';
 import tareaService from '@/services/tarea.service.js';
 
-const usuarioId = 1; // ⚠️ reemplazar luego con localStorage o store
+const usuarioId = localStorage.getItem("usuarioId");
 
 const tareasPorSector = ref([]);
 const tareaCercana = ref(null);
@@ -123,16 +123,17 @@ const tareaGeo = ref(null);
 const tareasPorUsuario = ref([]);
 const sectorMasCompletadas = ref(null);
 const promedioGlobal = ref(null);
+const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
 
 onMounted(async () => {
-  tareasPorSector.value = await tareaService.tareasPorSector(usuarioId).then(res => res.data);
-  tareaCercana.value = await tareaService.tareaMasCercana(usuarioId).then(res => res.data);
-  sectorMasEnRadio.value = await tareaService.sectorMasTareasEnRadio(usuarioId).then(res => res.data);
-  promedioUsuario.value = await tareaService.promedioDistanciaCompletadas(usuarioId).then(res => res.data);
-  sectoresMasPendientes.value = await tareaService.sectoresMasTareasPendientes().then(res => res.data);
-  tareaGeo.value = await tareaService.tareaPendienteCercanaUbicacion(usuarioId).then(res => res.data);
-  tareasPorUsuario.value = await tareaService.tareasPorUsuarioYSector().then(res => res.data);
-  sectorMasCompletadas.value = await tareaService.sectorMasCompletadas5km(usuarioId).then(res => res.data);
-  promedioGlobal.value = await tareaService.promedioDistanciaGlobal(usuarioId).then(res => res.data);
+  tareasPorSector.value = await tareaService.tareasPorSector(usuarioId, token).then(res => res.data);
+  tareaCercana.value = await tareaService.tareaMasCercana(usuarioId, token).then(res => res.data);
+  sectorMasEnRadio.value = await tareaService.sectorMasTareasEnRadio(usuarioId, token).then(res => res.data);
+  promedioUsuario.value = await tareaService.promedioDistanciaCompletadas(usuarioId, token).then(res => res.data);
+  sectoresMasPendientes.value = await tareaService.sectoresMasTareasPendientes(token).then(res => res.data);
+  tareaGeo.value = await tareaService.tareaPendienteCercanaUbicacion(usuarioId, token).then(res => res.data);
+  tareasPorUsuario.value = await tareaService.tareasPorUsuarioYSector(token).then(res => res.data);
+  sectorMasCompletadas.value = await tareaService.sectorMasCompletadas5km(usuarioId, token).then(res => res.data);
+  promedioGlobal.value = await tareaService.promedioDistanciaGlobal(usuarioId, token).then(res => res.data);
 });
 </script>

@@ -34,8 +34,9 @@ const router = useRouter();
 const tarea = ref(null);
 
 const cargarTarea = async () => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    const res = await tareaService.getTareaById(route.params.id);
+    const res = await tareaService.getTareaById(route.params.id, token);
     tarea.value = res.data;
   } catch (err) {
     console.error('Error al cargar tarea:', err);

@@ -2,32 +2,60 @@ import http from "../http-common";
 
 const baseUrl = "/api/notificaciones";
 
-const crearNotificacion = (notificacion) => {
-  return http.post(baseUrl, notificacion);
+const crearNotificacion = (notificacion, token) => {
+  return http.post(baseUrl, notificacion, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const obtenerTodas = () => {
-  return http.get(baseUrl);
+const obtenerTodas = (token) => {
+  return http.get(baseUrl, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const obtenerPorId = (id) => {
-  return http.get(`${baseUrl}/${id}`);
+const obtenerPorId = (id, token) => {
+  return http.get(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const eliminarNotificacion = (id) => {
-  return http.delete(`${baseUrl}/${id}`);
+const eliminarNotificacion = (id, token) => {
+  return http.delete(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const marcarComoLeida = (id) => {
-  return http.put(`${baseUrl}/${id}/leer`);
+const marcarComoLeida = (id, token) => {
+  return http.put(`${baseUrl}/${id}/leer`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const obtenerPorUsuario = (usuarioId) => {
-  return http.get(`${baseUrl}/getNotificacionByUsuario/${usuarioId}`);
+const obtenerPorUsuario = (usuarioId, token) => {
+  return http.get(`${baseUrl}/getNotificacionByUsuario/${usuarioId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const generarNotificacionesProximas = () => {
-  return http.post(`${baseUrl}/generarNotificaciones`);
+const generarNotificacionesProximas = (token) => {
+  return http.post(`${baseUrl}/generarNotificaciones`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export default {

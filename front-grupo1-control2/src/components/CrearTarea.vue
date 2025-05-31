@@ -92,8 +92,9 @@ const crearTarea = async () => {
     usuario: { id: usuarioId }
   };
 
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    await tareaService.crearTarea(tarea);
+    await tareaService.crearTarea(tarea, token);
     mensaje.value = 'Tarea creada correctamente.';
     mensajeTipo.value = 'success';
     // FALTA AASIGNARLE EL USUARIO ID
@@ -111,8 +112,9 @@ const crearTarea = async () => {
 };
 
 const obtenerSectores = async () => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    const res = await sectorService.obtenerTodos();
+    const res = await sectorService.obtenerTodos(token);
     sectores.value = res.data;
   } catch (err) {
     mensaje.value = 'Error al cargar sectores.';

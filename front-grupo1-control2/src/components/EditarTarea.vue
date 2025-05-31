@@ -73,8 +73,9 @@ const mensaje = ref('');
 const mensajeTipo = ref('success');
 
 const cargarTarea = async () => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    const tareasUsuario = await tareaService.getTareasByUsuario(1); // temporal si no tienes getById
+    const tareasUsuario = await tareaService.getTareasByUsuario(1, token); // temporal si no tienes getById
     const tarea = tareasUsuario.data.find(t => t.id == tareaId);
     if (!tarea) throw new Error('No se encontró la tarea');
 
@@ -99,7 +100,7 @@ const editarTarea = async () => {
       sector: { id: sectorId.value },
     };
 
-    await tareaService.update(tareaId, tareaActualizada);
+    await tareaService.update(tareaId, tareaActualizada); // no existe en el service
 
     mensaje.value = 'Tarea actualizada correctamente.';
     mensajeTipo.value = 'success';
@@ -113,7 +114,7 @@ const editarTarea = async () => {
 
 const cargarSectores = async () => {
   try {
-    const res = await sectorService.getAll();
+    const res = await sectorService.getAll(); // No existe en el service
     sectores.value = res.data;
   } catch (err) {
     mensaje.value = 'Error al cargar sectores.';

@@ -14,12 +14,20 @@ const register = (usuarioDTO) => {
 
 // ----------- CRUD -----------
 
-const getById = (id) => {
-  return http.get(`${baseUrl}/getById/${id}`);
+const getById = (id, token) => {
+  return http.get(`${baseUrl}/getById/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const getAll = () => {
-  return http.get(`${baseUrl}/getAll`);
+const getAll = (token) => {
+  return http.get(`${baseUrl}/getAll`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 // Buscar cliente por correo

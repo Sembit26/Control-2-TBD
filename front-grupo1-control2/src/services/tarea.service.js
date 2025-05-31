@@ -4,88 +4,157 @@ const baseUrl = "/api/tareas";
 
 // ----------- CRUD -----------
 
-const crearTarea = (tarea) => http.post(`${baseUrl}/create`, tarea);
+const crearTarea = (tarea, token) =>
+  http.post(`${baseUrl}/create`, tarea, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const editarTarea = (id, tareaActualizada) => http.put(`${baseUrl}/update/${id}`, tareaActualizada);
+const editarTarea = (id, tareaActualizada, token) =>
+  http.put(`${baseUrl}/update/${id}`, tareaActualizada, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const eliminarTarea = (id) => http.delete(`${baseUrl}/${id}`);
+const eliminarTarea = (id, token) =>
+  http.delete(`${baseUrl}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const marcarTareaComoCompletada = (id) => http.patch(`${baseUrl}/marcarTareaComoCompletada/${id}`);
+const marcarTareaComoCompletada = (id, token) =>
+  http.patch(`${baseUrl}/marcarTareaComoCompletada/${id}`, null, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 // ----------- Obtener tareas por relaciones -----------
 
-const getTareasByUsuario = (usuarioId) => http.get(`${baseUrl}/getTareasByUsuario/${usuarioId}`);
+const getTareasByUsuario = (usuarioId, token) =>
+  http.get(`${baseUrl}/getTareasByUsuario/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareasBySector = (sectorId) => http.get(`${baseUrl}/getTareasBySector/${sectorId}`);
+const getTareasBySector = (sectorId, token) =>
+  http.get(`${baseUrl}/getTareasBySector/${sectorId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareaById = (id) => http.get(`/api/tareas/getById/${id}`);
-
+const getTareaById = (id, token) =>
+  http.get(`/api/tareas/getById/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 // ----------- Filtros simples -----------
 
-const getTareasCompletadas = () => http.get(`${baseUrl}/getTareasCompletadas`);
+const getTareasCompletadas = (token) =>
+  http.get(`${baseUrl}/getTareasCompletadas`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareasPendientes = () => http.get(`${baseUrl}/getTareasPendientes`);
+const getTareasPendientes = (token) =>
+  http.get(`${baseUrl}/getTareasPendientes`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const buscarPorPalabraClave = (palabra) =>
-  http.get(`${baseUrl}/buscarPorPalabraClave`, { params: { palabra } });
+const buscarPorPalabraClave = (palabra, token) =>
+  http.get(`${baseUrl}/buscarPorPalabraClave`, {
+    params: { palabra },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const filtrarTareas = (completada, palabraClave) =>
-  http.get(`${baseUrl}/filtrar`, { params: { completada, palabraClave } });
+const filtrarTareas = (completada, palabraClave, token) =>
+  http.get(`${baseUrl}/filtrar`, {
+    params: { completada, palabraClave },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const filtrarTareasPorUsuario = (usuarioId, completada, palabraClave) =>
+const filtrarTareasPorUsuario = (usuarioId, completada, palabraClave, token) =>
   http.get(`${baseUrl}/getTareasByUsuarioFiltro/${usuarioId}`, {
-    params: { completada, palabraClave }
+    params: { completada, palabraClave },
+    headers: { Authorization: `Bearer ${token}` },
   });
 
 // ----------- Filtros paginados -----------
 
-const filtrarTareasPaginado = (completada, palabraClave, page = 0, size = 10) =>
-  http.get(`${baseUrl}/filtrarPaginado`, { params: { completada, palabraClave, page, size } });
+const filtrarTareasPaginado = (completada, palabraClave, page = 0, size = 10, token) =>
+  http.get(`${baseUrl}/filtrarPaginado`, {
+    params: { completada, palabraClave, page, size },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareasByUsuarioPaginado = (usuarioId, page = 0, size = 10) =>
-  http.get(`${baseUrl}/getTareasByUsuarioPaginado/${usuarioId}`, { params: { page, size } });
+const getTareasByUsuarioPaginado = (usuarioId, page = 0, size = 10, token) =>
+  http.get(`${baseUrl}/getTareasByUsuarioPaginado/${usuarioId}`, {
+    params: { page, size },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareasBySectorPaginado = (sectorId, page = 0, size = 10) =>
-  http.get(`${baseUrl}/getTareasBySectorPaginado/${sectorId}`, { params: { page, size } });
+const getTareasBySectorPaginado = (sectorId, page = 0, size = 10, token) =>
+  http.get(`${baseUrl}/getTareasBySectorPaginado/${sectorId}`, {
+    params: { page, size },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareasCompletadasPaginado = (page = 0, size = 10) =>
-  http.get(`${baseUrl}/getTareasCompletadasPaginado`, { params: { page, size } });
+const getTareasCompletadasPaginado = (page = 0, size = 10, token) =>
+  http.get(`${baseUrl}/getTareasCompletadasPaginado`, {
+    params: { page, size },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const getTareasPendientesPaginado = (page = 0, size = 10) =>
-  http.get(`${baseUrl}/getTareasPendientesPaginado`, { params: { page, size } });
+const getTareasPendientesPaginado = (page = 0, size = 10, token) =>
+  http.get(`${baseUrl}/getTareasPendientesPaginado`, {
+    params: { page, size },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const buscarPorPalabraClavePaginado = (palabra, page = 0, size = 10) =>
-  http.get(`${baseUrl}/buscarPorPalabraClavePaginado`, { params: { palabra, page, size } });
+const buscarPorPalabraClavePaginado = (palabra, page = 0, size = 10, token) =>
+  http.get(`${baseUrl}/buscarPorPalabraClavePaginado`, {
+    params: { palabra, page, size },
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 // ----------- PREGUNTAS estadísticas -----------
 
-const tareasPorSector = (usuarioId) =>
-  http.get(`${baseUrl}/tareasPorSector/${usuarioId}`);
+const tareasPorSector = (usuarioId, token) =>
+  http.get(`${baseUrl}/tareasPorSector/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const tareaMasCercana = (usuarioId) =>
-  http.get(`${baseUrl}/tareaMasCercana/${usuarioId}`);
+const tareaMasCercana = (usuarioId, token) =>
+  http.get(`${baseUrl}/tareaMasCercana/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const sectorMasTareasEnRadio = (usuarioId) =>
-  http.get(`${baseUrl}/sectorMasTareasEnRadio/${usuarioId}`);
+const sectorMasTareasEnRadio = (usuarioId, token) =>
+  http.get(`${baseUrl}/sectorMasTareasEnRadio/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const promedioDistanciaCompletadas = (usuarioId) =>
-  http.get(`${baseUrl}/promedioDistanciaCompletadas/${usuarioId}`);
+const promedioDistanciaCompletadas = (usuarioId, token) =>
+  http.get(`${baseUrl}/promedioDistanciaCompletadas/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const sectoresMasTareasPendientes = () =>
-  http.get(`${baseUrl}/sectoresMasTareasPendientes`);
+const sectoresMasTareasPendientes = (token) =>
+  http.get(`${baseUrl}/sectoresMasTareasPendientes`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const tareaPendienteCercanaUbicacion = (usuarioId) =>
-  http.get(`${baseUrl}/tareaPendienteCercanaUbicacion/${usuarioId}`);
+const tareaPendienteCercanaUbicacion = (usuarioId, token) =>
+  http.get(`${baseUrl}/tareaPendienteCercanaUbicacion/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const tareasPorUsuarioYSector = () =>
-  http.get(`${baseUrl}/tareasPorUsuarioYSector`);
+const tareasPorUsuarioYSector = (token) =>
+  http.get(`${baseUrl}/tareasPorUsuarioYSector`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const sectorMasCompletadas5km = (usuarioId) =>
-  http.get(`${baseUrl}/sectorMasTareasCompletadas5km/${usuarioId}`);
+const sectorMasCompletadas5km = (usuarioId, token) =>
+  http.get(`${baseUrl}/sectorMasTareasCompletadas5km/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-const promedioDistanciaGlobal = (usuarioId) =>
-  http.get(`${baseUrl}/promedioDistanciaGlobalCompletadas/${usuarioId}`);
+const promedioDistanciaGlobal = (usuarioId, token) =>
+  http.get(`${baseUrl}/promedioDistanciaGlobalCompletadas/${usuarioId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
 // ----------- Exportar -----------
 

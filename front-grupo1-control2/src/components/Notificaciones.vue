@@ -1,6 +1,6 @@
 <template>
   <v-container class="mt-8">
-    <h1 class="text-h5 font-weight-bold mb-4">Notificaciones</h1>
+    <h1 class="text-h5 font-weight-bold mb-4">Notificaciones (tareas que vencen dentro de 1 día)</h1>
 
     <v-row>
       <v-col cols="12" md="6" v-for="notif in notificaciones" :key="notif.id">
@@ -25,8 +25,21 @@
       </v-col>
     </v-row>
 
-    <v-alert v-if="notificaciones.length === 0" type="info">
-      No hay notificaciones disponibles.
+    <v-alert
+      v-if="notificaciones.length === 0"
+      type="info"
+      class="mt-8"
+      border="start"
+      elevation="2"
+      icon="mdi-bell-off-outline"
+      style="max-width: 400px;"
+    >
+      <div>
+        <span class="text-h6 font-weight-medium">No hay notificaciones disponibles</span>
+        <div class="mt-2 text-body-2">
+          ¡Estás al día!<br>
+        </div>
+      </div>
     </v-alert>
   </v-container>
 </template>
@@ -35,21 +48,26 @@
 import { ref, onMounted } from 'vue';
 import notificacionService from '@/services/notificacion.service.js';
 
-const usuarioId = 1; // ⚠️ reemplazar luego con el ID del usuario logueado
+// Obtener el ID del usuario logueado desde localStorage
+const usuarioId = localStorage.getItem('usuarioId');
 const notificaciones = ref([]);
 
 const cargarNotificaciones = async () => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    const res = await notificacionService.obtenerPorUsuario(usuarioId);
-    notificaciones.value = res.data;
+    await notificacionService.generarNotificacionesProximas(token);
+    const res = await notificacionService.obtenerPorUsuario(usuarioId, token);
+    // Filtrar notificaciones cuya tarea NO esté completada
+    notificaciones.value = res.data.filter(n => !n.tarea?.completada);
   } catch (err) {
     console.error('Error al cargar notificaciones:', err);
   }
 };
 
 const marcarComoLeida = async (id) => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    await notificacionService.marcarComoLeida(id);
+    await notificacionService.marcarComoLeida(id, token);
     await cargarNotificaciones();
   } catch (err) {
     console.error('Error al marcar como leída:', err);

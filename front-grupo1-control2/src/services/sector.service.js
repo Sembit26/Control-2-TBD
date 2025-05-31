@@ -2,24 +2,44 @@ import http from "../http-common";
 
 const baseUrl = "/api/sector";
 
-const crearSector = (sector) => {
-  return http.post(`${baseUrl}/create`, sector);
+const crearSector = (sector, token) => {
+  return http.post(`${baseUrl}/create`, sector, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const obtenerTodos = () => {
-  return http.get(`${baseUrl}/getAll`);
+const obtenerTodos = (token) => {
+  return http.get(`${baseUrl}/getAll`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const obtenerPorId = (id) => {
-  return http.get(`${baseUrl}/getById/${id}`);
+const obtenerPorId = (id, token) => {
+  return http.get(`${baseUrl}/getById/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const actualizarSector = (id, sectorActualizado) => {
-  return http.put(`${baseUrl}/${id}`, sectorActualizado);
+const actualizarSector = (id, sectorActualizado, token) => {
+  return http.put(`${baseUrl}/${id}`, sectorActualizado, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-const eliminarSector = (id) => {
-  return http.delete(`${baseUrl}/${id}`);
+const eliminarSector = (id, token) => {
+  return http.delete(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export default {

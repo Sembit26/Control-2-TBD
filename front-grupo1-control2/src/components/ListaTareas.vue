@@ -36,11 +36,13 @@ const usuarioId = localStorage.getItem('usuarioId');
 
 // Obtener tareas según filtros (solo del usuario)
 const buscarTareas = async () => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
     const response = await tareaService.filtrarTareasPorUsuario(
       usuarioId,
       estado.value,
-      palabraClave.value
+      palabraClave.value,
+      token
     );
     tareas.value = response.data;
   } catch (error) {
@@ -57,8 +59,9 @@ const recibirFiltros = ({ estado: nuevoEstado, palabra }) => {
 
 // Acciones
 const marcarCompletada = async (id) => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    await tareaService.marcarTareaComoCompletada(id);
+    await tareaService.marcarTareaComoCompletada(id, token);
     buscarTareas();
   } catch (err) {
     console.error('Error al marcar tarea:', err);
@@ -66,8 +69,9 @@ const marcarCompletada = async (id) => {
 };
 
 const eliminarTarea = async (id) => {
+  const token = localStorage.getItem("jwt"); // Obtener el token del localStorage
   try {
-    await tareaService.eliminarTarea(id);
+    await tareaService.eliminarTarea(id, token);
     buscarTareas();
   } catch (err) {
     console.error('Error al eliminar tarea:', err);
