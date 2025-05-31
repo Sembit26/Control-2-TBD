@@ -33,6 +33,11 @@ const buscarPorPalabraClave = (palabra) =>
 const filtrarTareas = (completada, palabraClave) =>
   http.get(`${baseUrl}/filtrar`, { params: { completada, palabraClave } });
 
+const filtrarTareasPorUsuario = (usuarioId, completada, palabraClave) =>
+  http.get(`${baseUrl}/getTareasByUsuarioFiltro/${usuarioId}`, {
+    params: { completada, palabraClave }
+  });
+
 // ----------- Filtros paginados -----------
 
 const filtrarTareasPaginado = (completada, palabraClave, page = 0, size = 10) =>
@@ -96,6 +101,7 @@ export default {
   getTareaById,
   buscarPorPalabraClave,
   filtrarTareas,
+  filtrarTareasPorUsuario,
   filtrarTareasPaginado,
   getTareasByUsuarioPaginado,
   getTareasBySectorPaginado,

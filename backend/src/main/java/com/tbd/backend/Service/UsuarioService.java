@@ -43,6 +43,12 @@ public class UsuarioService {
                 .map(this::convertToDTO);
     }
 
+    // Buscar usuario por correo
+    public Long buscarIdPorCorreo(String correo) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(correo);
+        return usuarioOpt.map(Usuario::getId).orElse(null);
+    }
+
     // Método privado para convertir entidad a DTO
     private UsuarioDTO convertToDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();

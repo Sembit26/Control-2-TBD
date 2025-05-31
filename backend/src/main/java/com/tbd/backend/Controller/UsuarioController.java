@@ -30,6 +30,18 @@ public class UsuarioController {
         return usuarioService.getAll();
     }
 
+    // Buscar cliente por correo
+    @GetMapping("/buscar/correo")
+    public ResponseEntity<Long> buscarIdPorCorreo(@RequestParam String correo) {
+        Long id = usuarioService.buscarIdPorCorreo(correo);
+        if (id != null) {
+            return ResponseEntity.ok(id);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     // Actualizar usuario
     @PutMapping("/update/{id}")
     public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuarioDetails) {

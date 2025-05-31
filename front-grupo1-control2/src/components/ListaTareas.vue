@@ -31,10 +31,17 @@ const estado = ref(null);
 const palabraClave = ref('');
 const router = useRouter();
 
-// Obtener tareas según filtros
+// Obtener el id del usuario logeado desde localStorage
+const usuarioId = localStorage.getItem('usuarioId');
+
+// Obtener tareas según filtros (solo del usuario)
 const buscarTareas = async () => {
   try {
-    const response = await tareaService.filtrarTareas(estado.value, palabraClave.value);
+    const response = await tareaService.filtrarTareasPorUsuario(
+      usuarioId,
+      estado.value,
+      palabraClave.value
+    );
     tareas.value = response.data;
   } catch (error) {
     console.error('Error al filtrar tareas:', error);

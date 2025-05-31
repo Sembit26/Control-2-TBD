@@ -6,7 +6,11 @@
         <li><router-link to="/tareas">Tareas</router-link></li>
         <li><router-link to="/tareas/crear">Crear Tarea</router-link></li>
         <li><router-link to="/notificaciones">Notificaciones <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span></router-link></li>
-        <li><router-link to="/login" >Cerrar sesión</router-link></li>
+        <li>
+          <button @click="cerrarSesion" class="logout-btn">
+            Cerrar sesión
+          </button>
+        </li>
       </ul>
     </nav>
     <div class="content">
@@ -29,7 +33,6 @@ export default {
   },
   methods: {
     async loadUnreadNotifications() {
-      
       if (!localStorage.getItem("id")) {
         return;
       }
@@ -40,6 +43,11 @@ export default {
         console.error("Error al cargar las notificaciones:", error);
       }
     },
+    cerrarSesion() {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("usuarioId");
+      this.$router.push("/login");
+    }
   }
 };
 </script>
@@ -100,5 +108,17 @@ export default {
 .content {
   margin-top: 60px;
   padding: 20px;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+}
+.logout-btn:hover {
+  text-decoration: underline;
 }
 </style>

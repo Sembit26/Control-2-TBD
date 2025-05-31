@@ -11,7 +11,7 @@ import Estadisticas from '@/components/Estadisticas.vue';
 import MapaSectores from '@/components/MapaSectores.vue';
 
 const routes = [
-  { path: '/', redirect: '/tareas' },
+  { path: '/', redirect: '/login' },
   { path: '/login', name: 'Login', component: Login, meta: { hideNavBar: true } },
   { path: '/register', name: 'Register', component: Register, meta: { hideNavBar: true } },
   { path: '/tareas', name: 'ListaTareas', component: ListaTareas },

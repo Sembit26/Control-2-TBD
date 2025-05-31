@@ -33,6 +33,17 @@ public class TareaController {
         return ResponseEntity.ok(tareaService.obtenerTareasPorUsuario(usuarioId));
     }
 
+    @GetMapping("/getTareasByUsuarioFiltro/{usuarioId}")
+    public ResponseEntity<List<Tarea>> obtenerTareasPorUsuario(
+            @PathVariable Long usuarioId,
+            @RequestParam(required = false) Boolean completada,
+            @RequestParam(required = false) String palabraClave
+    ) {
+        return ResponseEntity.ok(
+                tareaService.obtenerTareasPorUsuarioConFiltros(usuarioId, completada, palabraClave)
+        );
+    }
+
     // Obtener tareas por sector
     @GetMapping("/getTareasBySector/{sectorId}")
     public ResponseEntity<List<Tarea>> obtenerTareasPorSector(@PathVariable Long sectorId) {

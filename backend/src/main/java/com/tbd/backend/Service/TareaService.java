@@ -105,6 +105,31 @@ public class TareaService {
                 completada, palabraClave);
     }
 
+    public List<Tarea> obtenerTareasPorUsuarioConFiltros(Long usuarioId, Boolean completada, String palabraClave) {
+        boolean tienePalabraClave = palabraClave != null && !palabraClave.isEmpty();
+
+        if (completada == null && !tienePalabraClave) {
+            return tareaRepository.findByUsuarioId(usuarioId);
+        }
+
+        if (completada == null) {
+            // Solo palabra clave
+            return tareaRepository.findByUsuarioIdAndNombreContainingIgnoreCaseOrUsuarioIdAndDescripcionContainingIgnoreCase(
+                    usuarioId, palabraClave, usuarioId, palabraClave
+            );
+        }
+
+        if (!tienePalabraClave) {
+            // Solo estado
+            return tareaRepository.findByUsuarioIdAndCompletada(usuarioId, completada);
+        }
+
+        // Filtro combinado
+        return tareaRepository.findByUsuarioIdAndCompletadaAndNombreContainingIgnoreCaseOrUsuarioIdAndCompletadaAndDescripcionContainingIgnoreCase(
+                usuarioId, completada, palabraClave, usuarioId, completada, palabraClave
+        );
+    }
+
     public Page<Tarea> filtrarPorEstadoYPalabraClavePaginado(Boolean completada, String palabraClave, Pageable pageable) {
         boolean tienePalabraClave = palabraClave != null && !palabraClave.isEmpty();
 

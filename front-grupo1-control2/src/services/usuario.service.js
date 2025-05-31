@@ -22,6 +22,15 @@ const getAll = () => {
   return http.get(`${baseUrl}/getAll`);
 };
 
+// Buscar cliente por correo
+const buscarPorCorreo = (correo, token) => {
+  return http.get(`${baseUrl}/buscar/correo?correo=${correo}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const update = (id, usuarioActualizado) => {
   return http.put(`${baseUrl}/update/${id}`, usuarioActualizado);
 };
@@ -35,6 +44,7 @@ export default {
   register,
   getById,
   getAll,
+  buscarPorCorreo,
   update,
   eliminar,
 };

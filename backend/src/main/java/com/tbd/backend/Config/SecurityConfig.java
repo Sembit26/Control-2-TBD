@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         //SOLO PERMITE ACCEDER A ESAS RUTAS, LUEGO PARA ACCEDER A OTRAS NECESITARA UN TOKEN
-                        .requestMatchers("/api/usuario/login", "/api/usuario/register").permitAll()
+                        .requestMatchers("/api/usuario/login", "/api/usuario/register", "/api/usuario/buscar/correo").permitAll()
                         .anyRequest().permitAll()
                         //.anyRequest().authenticated() //DESPUES SE DEBE COLOCAR ESTO Y NO LO DE permitAll()
                 )

@@ -51,6 +51,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import usuarioService from '@/services/usuario.service.js';
+import ClienteService from '@/services/usuario.service.js';
 
 const correo = ref('');
 const contrasena = ref('');
@@ -65,8 +66,17 @@ const login = async () => {
 
     const res = await usuarioService.login({ correo: correo.value, contrasena: contrasena.value });
     // Guardar el id del usuario en localStorage
-    localStorage.setItem('usuarioId', res.data.id);
-    console.log("ID usuario logeado:", localStorage.getItem('usuarioId'));
+    localStorage.setItem("jwt", res.data);
+    //console.log("jwt:", res.data);
+
+    // buscarPorCorreo retorna un Long que es el id del usuario
+    const usuarioId = await ClienteService.buscarPorCorreo(correo.value, res.data);
+
+    // Guardar el id del usuario en localStorage
+    localStorage.setItem("usuarioId", usuarioId.data);
+    console.log("usuarioId:", usuarioId.data);
+
+
 
     router.push('/tareas'); // Redirigir a la vista principal
   } catch (err) {

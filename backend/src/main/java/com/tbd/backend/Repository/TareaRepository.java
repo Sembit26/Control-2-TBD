@@ -35,6 +35,16 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     // Tareas que vencen entre ahora y cierta fecha futura, y que aún no están completadas
     List<Tarea> findByFechaTerminoBetweenAndCompletada(Date desde, Date hasta, Boolean completada);
 
+    List<Tarea> findByUsuarioIdAndCompletada(Long usuarioId, Boolean completada);
+
+    List<Tarea> findByUsuarioIdAndNombreContainingIgnoreCaseOrUsuarioIdAndDescripcionContainingIgnoreCase(
+            Long usuarioId, String nombre, Long usuarioId2, String descripcion
+    );
+
+    List<Tarea> findByUsuarioIdAndCompletadaAndNombreContainingIgnoreCaseOrUsuarioIdAndCompletadaAndDescripcionContainingIgnoreCase(
+            Long usuarioId, Boolean completada, String nombre, Long usuarioId2, Boolean completada2, String descripcion
+    );
+
     Page<Tarea> findByCompletadaAndNombreContainingIgnoreCaseOrCompletadaAndDescripcionContainingIgnoreCase(
             Boolean c1, String nombre,
             Boolean c2, String descripcion,
