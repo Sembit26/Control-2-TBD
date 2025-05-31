@@ -8,12 +8,19 @@
     <!-- Lista de tareas -->
     <v-row>
       <v-col cols="12" md="6" v-for="tarea in tareas" :key="tarea.id">
-      <TareaCard
-        :tarea="tarea"
-        @onCompletar="marcarCompletada"
-        @onEliminar="eliminarTarea"
-      />
-
+        <TareaCard
+          :tarea="tarea"
+          @onCompletar="marcarCompletada"
+          @onEliminar="eliminarTarea"
+        />
+        <v-btn
+          color="warning"
+          class="mt-2"
+          @click="editarTarea(tarea.id)"
+          block
+        >
+          Editar
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -76,6 +83,10 @@ const eliminarTarea = async (id) => {
   } catch (err) {
     console.error('Error al eliminar tarea:', err);
   }
+};
+
+const editarTarea = (id) => {
+  router.push(`/tareas/editar/${id}`);
 };
 
 onMounted(() => {
