@@ -69,7 +69,7 @@
       <!-- 4 -->
       <v-col cols="12" >
         <v-card class="mb-4">
-          <v-card-title>4. Promedio de distancia tareas completadas (usuario)</v-card-title>
+          <v-card-title>4. Promedio de distancia de las tareas completadas respecto a la ubicación del Usuario</v-card-title>
           <v-card-text>
             <div class="mb-2">
               {{ promedioUsuario !== null ? promedioUsuario.toFixed(2) + ' metros' : 'No disponible' }}
@@ -187,7 +187,7 @@
       <!-- 9 -->
       <v-col cols="12" >
         <v-card class="mb-4">
-          <v-card-title>9. Promedio de distancia de todas las tareas completadas</v-card-title>
+          <v-card-title>9. Promedio de distancia entre las tareas completadas y el punto registrado del usuario</v-card-title>
           <v-card-text>
             <div v-if="promedioGlobal !== null">
               <strong>{{ promedioGlobal.toFixed(2) }}</strong> metros

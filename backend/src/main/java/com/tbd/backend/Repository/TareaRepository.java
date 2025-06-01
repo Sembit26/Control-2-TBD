@@ -75,33 +75,34 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     List<Tarea> findByUsuarioIdAndCompletadaFalse(Long usuarioId);
 
 
-    //REVISAR: ¿Cuál es el sector con más tareas completadas en un radio de 2 kilómetros del usuario?
-    @Query(value = """
-    SELECT s.nombre, COUNT(*) AS cantidad
-    FROM tarea t
-    JOIN sector s ON t.sector_id = s.id
-    JOIN usuario u ON u.id = :usuarioId
-    WHERE t.completada = TRUE
-      AND t.usuario_id = :usuarioId
-      AND ST_DWithin(u.ubicacion, s.ubicacion, 2000)
-    GROUP BY s.nombre
-    ORDER BY cantidad DESC
-    LIMIT 1
-""", nativeQuery = true)
-    Map<String, Object> sectorConMasTareasEnRadio(@Param("usuarioId") Long usuarioId);
-
     //¿Cuál es el sector con más tareas completadas en un radio de 2 kilómetros del usuario?
     @Query(value = """
-    SELECT AVG(ST_Distance(u.ubicacion::geography, s.ubicacion::geography)) AS promedio
+    SELECT s.nombre, COUNT(*) AS cantidad, ST_Distance(s.ubicacion::geography, u.ubicacion::geography) AS distancia
     FROM tarea t
     JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
     WHERE t.completada = TRUE
-      AND t.usuario_id = :usuarioId
+      AND ST_DWithin(s.ubicacion, u.ubicacion, 2000)
+    GROUP BY s.nombre, s.ubicacion, u.ubicacion
+    ORDER BY cantidad DESC, distancia ASC
+    LIMIT 1
+    """, nativeQuery = true)
+    Map<String, Object> sectorConMasTareasEnRadio(@Param("usuarioId") Long usuarioId);
+
+
+    //¿Cuál es el promedio de distancia de las tareas completadas respecto a la
+    //ubicación del usuario?
+    @Query(value = """
+    SELECT AVG(ST_Distance(s.ubicacion::geography, u.ubicacion::geography)) AS promedio_distancia
+    FROM tarea t
+    JOIN sector s ON t.sector_id = s.id
+    JOIN usuario u ON u.id = :usuarioId
+    WHERE t.completada = TRUE
 """, nativeQuery = true)
     Double promedioDistanciaTareasCompletadas(@Param("usuarioId") Long usuarioId);
 
-    //REVISAR: ¿En qué sectores geográficos se concentran la mayoría de las tareas
+
+    //¿En qué sectores geográficos se concentran la mayoría de las tareas
     //pendientes? (utilizando agrupación espacial).
     @Query(value = """
     WITH sectores_agrupados AS (
@@ -144,7 +145,7 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 """, nativeQuery = true)
     List<Map<String, Object>> sectoresConMasTareasPendientes();
 
-    //REVISAR: ¿Cuál es la tarea más cercana al usuario (que esté pendiente)?
+    //¿Cuál es la tarea más cercana al usuario (que esté pendiente)?
     @Query(value = """
     SELECT t.*
     FROM tarea t
@@ -191,8 +192,8 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
     WHERE t.completada = TRUE
+      AND t.usuario_id = :usuarioId
 """, nativeQuery = true)
     Double promedioDistanciaTodasCompletadasAUsuario(@Param("usuarioId") Long usuarioId);
-
 
 }
