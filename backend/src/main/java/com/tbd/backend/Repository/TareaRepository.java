@@ -82,6 +82,7 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
     WHERE t.completada = TRUE
+      AND t.usuario_id = :usuarioId
       AND ST_DWithin(u.ubicacion, s.ubicacion, 2000)
     GROUP BY s.nombre
     ORDER BY cantidad DESC
@@ -91,11 +92,12 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 
     //¿Cuál es el sector con más tareas completadas en un radio de 2 kilómetros del usuario?
     @Query(value = """
-    SELECT AVG(ST_Distance(u.ubicacion, s.ubicacion)) AS promedio
+    SELECT AVG(ST_Distance(u.ubicacion::geography, s.ubicacion::geography)) AS promedio
     FROM tarea t
     JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
     WHERE t.completada = TRUE
+      AND t.usuario_id = :usuarioId
 """, nativeQuery = true)
     Double promedioDistanciaTareasCompletadas(@Param("usuarioId") Long usuarioId);
 

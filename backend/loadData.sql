@@ -4,8 +4,7 @@
 -- Activar la extensión PostGIS
 CREATE EXTENSION IF NOT EXISTS postgis;
 
--- Limpiar las tablas
-TRUNCATE notificacion, tarea, sector, usuario RESTART IDENTITY CASCADE;
+SET client_encoding = 'UTF8';
 
 INSERT INTO usuario (username, correo, contrasena, ubicacion) VALUES
 ('usuario1', 'user1@example.com', 'pass1', ST_SetSRID(ST_MakePoint(-70.6500, -33.4400), 4326)),
