@@ -54,7 +54,7 @@
       <!-- 3 -->
       <v-col cols="12">
         <v-card class="mb-4">
-          <v-card-title>3. Sector con más tareas completadas (radio 2 km)</v-card-title>
+          <v-card-title>3. Sector con más tareas completadas en un radio de 2 kilómetros del Usuario</v-card-title>
           <v-card-text v-if="sectorMasEnRadio">
             El sector <strong>{{ sectorMasEnRadio.nombre }}</strong> tiene 
             <strong>{{ sectorMasEnRadio.cantidad }}</strong> tareas completadas cerca del usuario.
@@ -170,7 +170,7 @@
       <!-- 8 -->
       <v-col cols="12">
         <v-card class="mb-4">
-          <v-card-title>8. Sector con más tareas completadas a 5 km</v-card-title>
+          <v-card-title>8. Sector con más tareas completadas dentro de un radio de 5 km</v-card-title>
           <v-card-text>
             <div v-if="sectorMasCompletadas">
               <strong>Sector:</strong> {{ sectorMasCompletadas.sector }} <br />

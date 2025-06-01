@@ -82,9 +82,9 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     JOIN sector s ON t.sector_id = s.id
     JOIN usuario u ON u.id = :usuarioId
     WHERE t.completada = TRUE
-      AND ST_DWithin(s.ubicacion, u.ubicacion, 2000)
+      AND ST_DWithin(s.ubicacion::geography, u.ubicacion::geography, 2000)
     GROUP BY s.nombre, s.ubicacion, u.ubicacion
-    ORDER BY cantidad DESC, distancia ASC
+    ORDER BY cantidad DESC, ABS(ST_Distance(s.ubicacion::geography, u.ubicacion::geography) - 2000) ASC
     LIMIT 1
     """, nativeQuery = true)
     Map<String, Object> sectorConMasTareasEnRadio(@Param("usuarioId") Long usuarioId);
@@ -178,8 +178,8 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     JOIN usuario u ON u.id = :usuarioId
     WHERE t.completada = TRUE
       AND ST_DWithin(s.ubicacion::geography, u.ubicacion::geography, 5000)
-    GROUP BY s.nombre
-    ORDER BY total_tareas DESC
+    GROUP BY s.nombre, s.ubicacion, u.ubicacion
+    ORDER BY total_tareas DESC, MIN(ST_Distance(s.ubicacion::geography, u.ubicacion::geography)) ASC
     LIMIT 1
 """, nativeQuery = true)
     Map<String, Object> sectorConMasCompletadasEnRadio5km(@Param("usuarioId") Long usuarioId);
