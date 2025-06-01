@@ -71,17 +71,9 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 """, nativeQuery = true)
     List<Map<String, Object>> contarTareasPorSectorUsuario(@Param("usuarioId") Long usuarioId);
 
-    //REVISAR: ¿Cuál es la tarea más cercana al usuario (que esté pendiente)?
-    @Query(value = """
-    SELECT t.*
-    FROM tarea t
-    JOIN sector s ON t.sector_id = s.id
-    JOIN usuario u ON t.usuario_id = u.id
-    WHERE t.completada = FALSE AND u.id = :usuarioId
-    ORDER BY ST_Distance(u.ubicacion::geography, s.ubicacion::geography)
-    LIMIT 1
-""", nativeQuery = true)
-    Tarea tareaPendienteMasCercana(@Param("usuarioId") Long usuarioId);
+    //Tareas pendientes asociadas a un usuario
+    List<Tarea> findByUsuarioIdAndCompletadaFalse(Long usuarioId);
+
 
     //REVISAR: ¿Cuál es el sector con más tareas completadas en un radio de 2 kilómetros del usuario?
     @Query(value = """
@@ -150,8 +142,17 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
 """, nativeQuery = true)
     List<Map<String, Object>> sectoresConMasTareasPendientes();
 
-    //Tareas pendientes asociadas a un usuario
-    List<Tarea> findByUsuarioIdAndCompletadaFalse(Long usuarioId);
+    //REVISAR: ¿Cuál es la tarea más cercana al usuario (que esté pendiente)?
+    @Query(value = """
+    SELECT t.*
+    FROM tarea t
+    JOIN sector s ON t.sector_id = s.id
+    JOIN usuario u ON t.usuario_id = u.id
+    WHERE t.completada = FALSE AND u.id = :usuarioId
+    ORDER BY ST_Distance(u.ubicacion::geography, s.ubicacion::geography)
+    LIMIT 1
+""", nativeQuery = true)
+    Tarea tareaPendienteMasCercana(@Param("usuarioId") Long usuarioId);
 
     //¿Cuántas tareas ha realizado cada usuario por sector?
     @Query(value = """

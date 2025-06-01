@@ -116,10 +116,12 @@ const tareasPorSector = (usuarioId, token) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-const tareaMasCercana = (usuarioId, token) =>
-  http.get(`${baseUrl}/tareaMasCercana/${usuarioId}`, {
+
+const tareasPendientesDelUsuario = (usuarioId, token) =>
+  http.get(`${baseUrl}/tareaPendientesDelUsuario/${usuarioId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
 
 const sectorMasTareasEnRadio = (usuarioId, token) =>
   http.get(`${baseUrl}/sectorMasTareasEnRadio/${usuarioId}`, {
@@ -133,6 +135,11 @@ const promedioDistanciaCompletadas = (usuarioId, token) =>
 
 const sectoresMasTareasPendientes = (token) =>
   http.get(`${baseUrl}/sectoresMasTareasPendientes`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+const tareaMasCercana = (usuarioId, token) =>
+  http.get(`${baseUrl}/tareaMasCercana/${usuarioId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -185,5 +192,6 @@ export default {
   tareaPendienteCercanaUbicacion,
   tareasPorUsuarioYSector,
   sectorMasCompletadas5km,
-  promedioDistanciaGlobal
+  promedioDistanciaGlobal,
+  tareasPendientesDelUsuario
 };

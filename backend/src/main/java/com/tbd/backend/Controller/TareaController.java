@@ -179,11 +179,6 @@ public class TareaController {
         return ResponseEntity.ok(tareasPendientes);
     }
 
-    @GetMapping("/tareaMasCercana/{usuarioId}")
-    public ResponseEntity<Tarea> tareaMasCercana(@PathVariable Long usuarioId) {
-        Tarea tarea = tareaService.tareaPendienteMasCercana(usuarioId);
-        return tarea != null ? ResponseEntity.ok(tarea) : ResponseEntity.notFound().build();
-    }
 
     @GetMapping("/sectorMasTareasEnRadio/{usuarioId}")
     public ResponseEntity<Map<String, Object>> sectorMasTareasEnRadio(@PathVariable Long usuarioId) {
@@ -200,6 +195,12 @@ public class TareaController {
     @GetMapping("/sectoresMasTareasPendientes")
     public ResponseEntity<List<Map<String, Object>>> sectoresMasPendientes() {
         return ResponseEntity.ok(tareaService.sectoresConMasTareasPendientes());
+    }
+
+    @GetMapping("/tareaMasCercana/{usuarioId}")
+    public ResponseEntity<Tarea> tareaMasCercana(@PathVariable Long usuarioId) {
+        Tarea tarea = tareaService.tareaPendienteMasCercana(usuarioId);
+        return tarea != null ? ResponseEntity.ok(tarea) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/tareasPorUsuarioYSector")

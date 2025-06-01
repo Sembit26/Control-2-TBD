@@ -178,9 +178,10 @@ public class TareaService {
         return tareaRepository.contarTareasPorSectorUsuario(usuarioId);
     }
 
-    public Tarea tareaPendienteMasCercana(Long usuarioId) {
-        return tareaRepository.tareaPendienteMasCercana(usuarioId);
+    public List<Tarea> tareaPendienteDelUsuario(Long usuarioId) {
+        return tareaRepository.findByUsuarioIdAndCompletadaFalse(usuarioId);
     }
+
 
     public Map<String, Object> sectorConMasTareasEnRadio(Long usuarioId) {
         return tareaRepository.sectorConMasTareasEnRadio(usuarioId);
@@ -194,8 +195,8 @@ public class TareaService {
         return tareaRepository.sectoresConMasTareasPendientes();
     }
 
-    public List<Tarea> tareaPendienteDelUsuario(Long usuarioId) {
-        return tareaRepository.findByUsuarioIdAndCompletadaFalse(usuarioId);
+    public Tarea tareaPendienteMasCercana(Long usuarioId) {
+        return tareaRepository.tareaPendienteMasCercana(usuarioId);
     }
 
     public List<Map<String, Object>> contarTareasPorUsuarioYSector() {

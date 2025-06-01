@@ -6,6 +6,7 @@
         <li><router-link to="/tareas">Tareas</router-link></li>
         <li><router-link to="/tareas/crear">Crear Tarea</router-link></li>
         <li><router-link to="/notificaciones">Notificaciones <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span></router-link></li>
+        <li><router-link to="/estadisticas">Estadisticas</router-link></li>
         <li>
           <button @click="cerrarSesion" class="logout-btn">
             Cerrar sesión
