@@ -48,7 +48,7 @@ Ingresa la contraseña del usuario postgres cuando se solicite.
 Lo anterior creara la estructura base del proyecto (tablas).
 
 4. Crear cliente:
-   Utiliza Postman o el "register" del frontend, apartado 6 (recomendado) para crear un primer usuario enviando una solicitud POST a:
+   Utiliza Postman para crear un primer usuario enviando una solicitud POST a:
 ```sh
 http://localhost:8090/api/usuario/register
 ```
@@ -66,7 +66,7 @@ Con el siguiente cuerpo JSON:
 ```
 
 Este cliente es para efectos practicos de la carga de datos, básicamente para que se pueda ver los resumenes asociados a este cliente
-
+Otra alternativa para esto es a través del "register" del frontend, la configuración y ejeccución de este se encuentra en el apartado 6 (recomendado)
 5. Cargar datos en la base de datos:
    Una vez registrado el ususario inicial en la base de datos, 
     desde la consola de PostgreSQL, ejecuta los siguientes comandos:
@@ -78,11 +78,8 @@ Ingresa la contraseña del usuario postgres cuando se solicite.
 ```sh
 \i C:/ruta/loadData.sql  
 ```
-* Puedes iniciar sesión con los datos de los clientes cargados mediante el archivo loadData, ya que si bien al momento de registrar un usuario por Postman (o resgiter del Frontend)
-* su contraseña queda encriptada, al momento de cargar los datos "manualmente" no lo hace, por lo que se permitio que solo los clientes que se carguen a mano y tengan
-* en su correo @example.com puedan iniciar sesión con una contraseña sin encriptacion, esto para efectos de que si se desea corroborar su tareas asociadas. Para
-* verificar lo anterior, si lo desea, pruebe ingresando el correo "user3@example.cl" de "usuario3" con su contraseña "pass3", con lo cual no se permitira su
-* ingreso pues su correo no termina en @example.com. Por otro lado, "user12@example.com" con contraseña "pass12" si le dejera ingresar.
+* Puedes iniciar sesión con los datos de los clientes cargados mediante el archivo loadData, ya que si bien al momento de registrar un usuario por Postman (o resgiter del Frontend) su contraseña queda encriptada, al momento de cargar los datos "manualmente" no lo hace, por lo que se permitió que solo los clientes que se carguen a mano y tengan en su correo @example.com puedan iniciar sesión con una contraseña sin encriptación, esto en caso de desear corroborar su tareas asociadas.
+* Para verificar lo anterior, si lo desea, pruebe ingresando el correo "user3@example.cl" de "usuario3" con su contraseña "pass3", con lo cual no se permitirá su ingreso pues su correo no termina en "@example.com". Por otro lado, "user12@example.com" con contraseña "pass12" si le permitirá ingresar.
 
 6. Configurar y ejecutar el frontend:
    Dentro de la carpeta Frontend, abre la consola y ejecuta los siguientes comandos para instalar las dependencias y levantar el frontend:
