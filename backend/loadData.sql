@@ -8,8 +8,8 @@ SET client_encoding = 'UTF8';
 
 INSERT INTO usuario (username, correo, contrasena, ubicacion) VALUES
 ('usuario1', 'user1@example.com', 'pass1', ST_SetSRID(ST_MakePoint(-70.6500, -33.4400), 4326)),
-('usuario2', 'user2@example.com', 'pass2', ST_SetSRID(ST_MakePoint(-70.6100, -33.5000), 4326)),
-('usuario3', 'user3@example.com', 'pass3', ST_SetSRID(ST_MakePoint(-70.5800, -33.4200), 4326)),
+('usuario2', 'user2@example.cl', 'pass2', ST_SetSRID(ST_MakePoint(-70.6100, -33.5000), 4326)),
+('usuario3', 'user3@example.cl', 'pass3', ST_SetSRID(ST_MakePoint(-70.5800, -33.4200), 4326)),
 ('usuario4', 'user4@example.com', 'pass4', ST_SetSRID(ST_MakePoint(-70.6000, -33.4600), 4326)),
 ('usuario5', 'user5@example.com', 'pass5', ST_SetSRID(ST_MakePoint(-70.6300, -33.4700), 4326)),
 ('usuario6', 'user6@example.com', 'pass6', ST_SetSRID(ST_MakePoint(-70.6400, -33.4500), 4326)),
@@ -19,14 +19,14 @@ INSERT INTO usuario (username, correo, contrasena, ubicacion) VALUES
 ('usuario10', 'user10@example.com', 'pass10', ST_SetSRID(ST_MakePoint(-70.6050, -33.4550), 4326)),
 ('usuario11', 'user11@example.com', 'pass11', ST_SetSRID(ST_MakePoint(-70.6350, -33.4420), 4326)),
 ('usuario12', 'user12@example.com', 'pass12', ST_SetSRID(ST_MakePoint(-70.6200, -33.4440), 4326)),
-('usuario13', 'user13@example.com', 'pass13', ST_SetSRID(ST_MakePoint(-70.6110, -33.4570), 4326)),
-('usuario14', 'user14@example.com', 'pass14', ST_SetSRID(ST_MakePoint(-70.6030, -33.4490), 4326)),
-('usuario15', 'user15@example.com', 'pass15', ST_SetSRID(ST_MakePoint(-70.5990, -33.4700), 4326)),
-('usuario16', 'user16@example.com', 'pass16', ST_SetSRID(ST_MakePoint(-70.6420, -33.4300), 4326)),
-('usuario17', 'user17@example.com', 'pass17', ST_SetSRID(ST_MakePoint(-70.6300, -33.4230), 4326)),
-('usuario18', 'user18@example.com', 'pass18', ST_SetSRID(ST_MakePoint(-70.6120, -33.4330), 4326)),
-('usuario19', 'user19@example.com', 'pass19', ST_SetSRID(ST_MakePoint(-70.5950, -33.4470), 4326)),
-('usuario20', 'user20@example.com', 'pass20', ST_SetSRID(ST_MakePoint(-70.6060, -33.4600), 4326));
+('usuario13', 'user13@example.cl', 'pass13', ST_SetSRID(ST_MakePoint(-70.6110, -33.4570), 4326)),
+('usuario14', 'user14@example.cl', 'pass14', ST_SetSRID(ST_MakePoint(-70.6030, -33.4490), 4326)),
+('usuario15', 'user15@example.cl', 'pass15', ST_SetSRID(ST_MakePoint(-70.5990, -33.4700), 4326)),
+('usuario16', 'user16@example.cl', 'pass16', ST_SetSRID(ST_MakePoint(-70.6420, -33.4300), 4326)),
+('usuario17', 'user17@example.cl', 'pass17', ST_SetSRID(ST_MakePoint(-70.6300, -33.4230), 4326)),
+('usuario18', 'user18@example.cl', 'pass18', ST_SetSRID(ST_MakePoint(-70.6120, -33.4330), 4326)),
+('usuario19', 'user19@example.cl', 'pass19', ST_SetSRID(ST_MakePoint(-70.5950, -33.4470), 4326)),
+('usuario20', 'user20@example.cl', 'pass20', ST_SetSRID(ST_MakePoint(-70.6060, -33.4600), 4326));
 
 
 INSERT INTO sector (nombre, descripcion, ubicacion) VALUES
@@ -75,22 +75,22 @@ INSERT INTO sector (nombre, descripcion, ubicacion) VALUES
 INSERT INTO tarea (usuario_id, sector_id, nombre, descripcion, fecha_termino, completada) VALUES
 (1, 1, 'Limpieza sector 1', 'Recoger basura y escombros', '2025-06-01', FALSE),
 (2, 2, 'Poda de árboles', 'Poda preventiva de ramas largas', '2025-06-02', TRUE),
-(3, 3, 'Revisión alumbrado', 'Revisión de luminarias públicas', '2025-06-03', FALSE),
+(1, 3, 'Revisión alumbrado', 'Revisión de luminarias públicas', '2025-06-03', FALSE),
 (4, 4, 'Pintura de bancas', 'Pintado de mobiliario urbano', '2025-06-04', TRUE),
-(5, 5, 'Mantenimiento juegos', 'Reparar juegos infantiles', '2025-06-05', FALSE),
+(1, 5, 'Mantenimiento juegos', 'Reparar juegos infantiles', '2025-06-05', FALSE),
 (6, 6, 'Reparación veredas', 'Veredas levantadas por raíces', '2025-06-06', FALSE),
 (7, 7, 'Instalación cámaras', 'Cámaras de seguridad municipal', '2025-06-07', TRUE),
 (8, 8, 'Desinfección plaza', 'Desinfección contra plagas', '2025-06-08', FALSE),
-(9, 9, 'Fiscalización comercio', 'Control de comercio informal', '2025-06-09', FALSE),
-(10, 10, 'Reparación señalética', 'Cambio de señales deterioradas', '2025-06-10', TRUE),
-(11, 11, 'Recolección reciclaje', 'Clasificar y recoger residuos reciclables', '2025-06-11', FALSE),
+(1, 9, 'Fiscalización comercio', 'Control de comercio informal', '2025-06-09', FALSE),
+(1, 10, 'Reparación señalética', 'Cambio de señales deterioradas', '2025-06-10', TRUE),
+(12, 11, 'Recolección reciclaje', 'Clasificar y recoger residuos reciclables', '2025-06-11', FALSE),
 (12, 12, 'Inspección de juegos', 'Verificar estado de juegos infantiles', '2025-06-12', TRUE),
-(13, 13, 'Instalación de bancas nuevas', 'Colocar nuevo mobiliario urbano', '2025-06-13', FALSE),
+(1, 13, 'Instalación de bancas nuevas', 'Colocar nuevo mobiliario urbano', '2025-06-13', FALSE),
 (14, 14, 'Reparación de vereda', 'Nivelar adoquines sueltos', '2025-06-14', TRUE),
 (15, 15, 'Mantenimiento pasaje techado', 'Limpieza e iluminación', '2025-06-15', FALSE),
 (16, 16, 'Demarcación estacionamientos', 'Pintado de espacios para vehículos', '2025-06-16', FALSE),
 (17, 17, 'Supervisión zona carga', 'Control del uso por camiones', '2025-06-17', TRUE),
-(18, 18, 'Mejoras en mirador', 'Colocar barandas y paneles solares', '2025-06-18', FALSE),
+(12, 18, 'Mejoras en mirador', 'Colocar barandas y paneles solares', '2025-06-18', FALSE),
 (19, 19, 'Cierre callejón', 'Bloqueo de acceso indebido', '2025-06-19', FALSE),
 (20, 20, 'Siembra de plantas', 'Plantación de arbustos decorativos', '2025-06-20', TRUE);
 

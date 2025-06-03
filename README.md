@@ -26,7 +26,7 @@ Para ejecutar correctamente todo el proyecto, además de los archivos del reposi
 ## Instrucciones de uso
 1. Clona el repositorio en tu máquina local usando el siguiente comando:
 ```sh
-git clone https://github.com/NicoM04/Lab1-TDB-Grupo3.git
+git clone https://github.com/Sembit26/Control-2-TBD.git
 ```
 
 2. Configurar la base de datos
@@ -35,29 +35,29 @@ git clone https://github.com/NicoM04/Lab1-TDB-Grupo3.git
 ```sh
 psql -U postgres
 ```
+
 Ingresa la contraseña del usuario postgres cuando se solicite.
 * Carga el archivo de creación de la base de datos:
 ```sh
 \i C:/ruta/DBCreate.sql  
 ```
-
-Esto creará la estructura de la base de datos necesaria para la aplicación.
-
 3. Ejecutar el backend
 * Abre la carpeta Backend en IntelliJ IDEA.
 * Ejecuta la aplicación haciendo clic en la opción "Run".
 
+Lo anterior creara la estructura base del proyecto (tablas).
+
 4. Crear cliente:
-   Utiliza Postman para crear un primer usuario enviando una solicitud POST a:
+   Utiliza Postman o el "register" del frontend, apartado 6 (recomendado) para crear un primer usuario enviando una solicitud POST a:
 ```sh
 http://localhost:8090/api/usuario/register
 ```
 Con el siguiente cuerpo JSON:
 ```sh
 {
-  "username": "jlopez",
-  "correo": "jlopez@ejemplo.cl",
-  "contrasena": "1234",
+  "username": "cliente",
+  "correo": "cliente1@gmail.com",
+  "contrasena": "admin",
   "ubicacion": {
     "type": "Point",
     "coordinates": [-70.6506, -33.4372]
@@ -68,20 +68,21 @@ Con el siguiente cuerpo JSON:
 Este cliente es para efectos practicos de la carga de datos, básicamente para que se pueda ver los resumenes asociados a este cliente
 
 5. Cargar datos en la base de datos:
-   Desde la consola de PostgreSQL, ejecuta los siguientes comandos:
+   Una vez registrado el ususario inicial en la base de datos, 
+    desde la consola de PostgreSQL, ejecuta los siguientes comandos:
 ```sh
 psql -U postgres
 ```
 Ingresa la contraseña del usuario postgres cuando se solicite.
 * Carga los datos para la base de datos:
 ```sh
-\i C:/ruta/loadDB.sql  
+\i C:/ruta/loadData.sql  
 ```
-* Puedes iniciar sesión con los datos de los clientes cargados mediante el archivo loadDB, ya que si bien al momento de registrar un usuario por Postman
+* Puedes iniciar sesión con los datos de los clientes cargados mediante el archivo loadData, ya que si bien al momento de registrar un usuario por Postman (o resgiter del Frontend)
 * su contraseña queda encriptada, al momento de cargar los datos "manualmente" no lo hace, por lo que se permitio que solo los clientes que se carguen a mano y tengan
-* en su correo @example.com puedan iniciar sesión con una contraseña sin encriptacion, esto para efectos de que si se desea corroborar su resumen de pedidos. Para
-* verificar lo anterior, si lo desea, pruebe ingresando el correo "ana.torres@prueba.com" de "Ana Torre" con su contraseña "contraseña", con lo cual no se permitira su
-* ingreso pues su correo no termina en @example.com. Por otro lado, "luis.rojas@example.com" con contraseña "contraseña" si le dejera ingresar.
+* en su correo @example.com puedan iniciar sesión con una contraseña sin encriptacion, esto para efectos de que si se desea corroborar su tareas asociadas. Para
+* verificar lo anterior, si lo desea, pruebe ingresando el correo "user3@example.cl" de "usuario3" con su contraseña "pass3", con lo cual no se permitira su
+* ingreso pues su correo no termina en @example.com. Por otro lado, "user12@example.com" con contraseña "pass12" si le dejera ingresar.
 
 6. Configurar y ejecutar el frontend:
    Dentro de la carpeta Frontend, abre la consola y ejecuta los siguientes comandos para instalar las dependencias y levantar el frontend:
